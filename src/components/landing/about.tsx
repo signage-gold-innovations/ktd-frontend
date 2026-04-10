@@ -3,26 +3,26 @@ import { Button } from '@/components/ui/button';
 export function About() {
   return (
     <section id="about" className="relative" style={{ backgroundColor: '#1D1D1D' }}>
-      <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-[80px] pb-[160px] md:px-[72px] md:pb-[80px]">
+      <div className="relative mx-auto w-full max-w-[1440px] px-4 pt-[80px] pb-[160px] md:px-[100px] md:pt-[120px] md:pb-[140px]">
         {/* flex-wrap: left column has a fixed min-width matching the absolute blocks' extent
             (pl 100 + left 232 + w 353 = 685px). When viewport is too narrow for both columns,
             right column wraps below automatically instead of overlapping. */}
         <div className="flex flex-col items-center gap-8 md:flex-row md:flex-wrap md:items-start md:gap-8">
           {/* Left design column — always fixed size; overflow-x-auto prevents narrow-screen breakout */}
           <div className="w-full overflow-hidden md:w-auto md:overflow-visible">
-            <div className="relative h-[464px] w-[685px] shrink-0">
+            <div className="relative h-[464px] w-[685px] shrink-0 md:h-[580px] md:w-[800px]">
               <div
-                className="absolute top-[32px] h-[156.1897430419922px] w-[140.21038818359375px] bg-[#707070] md:top-0 md:left-0 md:h-[222px] md:w-[206px]"
+                className="absolute top-[32px] h-[156.1897430419922px] w-[140.21038818359375px] bg-[#707070] md:top-0 md:left-0 md:h-[280px] md:w-[260px]"
                 style={{ transform: 'rotate(0deg)', opacity: 1 }}
               />
 
               <div
-                className="absolute top-[32px] left-[157.74px] h-[248.3557586669922px] w-[240.26344299316406px] bg-[#3F3F3F] md:top-0 md:left-[232px] md:h-[353px] md:w-[353px]"
+                className="absolute top-[32px] left-[157.74px] h-[248.3557586669922px] w-[240.26344299316406px] bg-[#3F3F3F] md:top-0 md:left-[290px] md:h-[440px] md:w-[440px]"
                 style={{ transform: 'rotate(0deg)', opacity: 1 }}
               />
 
               <div
-                className="absolute top-[205.78px] h-[152.6719512939453px] w-[322.6200256347656px] bg-[#D9D9D9] md:top-[247px] md:left-0 md:h-[217px] md:w-[474px]"
+                className="absolute top-[205.78px] h-[152.6719512939453px] w-[322.6200256347656px] bg-[#D9D9D9] md:top-[310px] md:left-0 md:h-[270px] md:w-[590px]"
                 style={{ transform: 'rotate(0deg)', opacity: 1 }}
               />
             </div>
@@ -39,7 +39,7 @@ export function About() {
             </h1>
 
             <h2
-              className="mt-[32px] text-[20px] leading-[100%] font-[500] text-[#969696] md:mt-4 md:text-[40px] md:leading-[100%] md:font-[400] md:text-[var(--Gray-1,#E0E0E0)]"
+              className="mt-[32px] text-[20px] leading-[100%] font-[500] text-[#969696] md:mt-6 md:text-[52px] md:leading-[110%] md:font-[400] md:text-[var(--Gray-1,#E0E0E0)]"
               style={{ fontFamily: 'var(--font-anuphan)' }}
             >
               <span className="inline md:block">HiTerraTech,</span>
@@ -48,7 +48,7 @@ export function About() {
             </h2>
 
             <p
-              className="mt-[32px] text-[20px] leading-[100%] text-[#969696] md:mt-4"
+              className="mt-[32px] text-[20px] leading-[100%] text-[#969696] md:mt-6 md:text-[22px] md:leading-[170%]"
               style={{ fontFamily: 'var(--font-anuphan)', fontWeight: 500 }}
             >
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
@@ -58,7 +58,7 @@ export function About() {
 
             <div className="mt-[32px] md:mt-4">
               <Button
-                className="h-[49px] w-[124px] bg-[#3F3F3F] text-white"
+                className="h-[49px] w-[124px] bg-[#3F3F3F] text-white md:h-[60px] md:w-[154px] md:text-[20px]"
                 style={{
                   fontFamily: 'var(--font-anuphan)',
                   fontWeight: 700,
