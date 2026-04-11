@@ -1,17 +1,17 @@
-import Link from "next/link";
-import { HugeiconsIcon } from "@hugeicons/react";
+import Link from 'next/link';
 import {
   FacebookIcon,
-  InstagramIcon,
+  InternetIcon,
   NewTwitterIcon,
   YoutubeIcon,
-} from "@hugeicons/core-free-icons";
+} from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 
 const socialIcons = [
-  { icon: FacebookIcon, href: "#", label: "Facebook" },
-  { icon: InstagramIcon, href: "#", label: "Instagram" },
-  { icon: NewTwitterIcon, href: "#", label: "X" },
-  { icon: YoutubeIcon, href: "#", label: "YouTube" },
+  { icon: FacebookIcon, href: '#', label: 'Facebook' },
+  { icon: YoutubeIcon, href: '#', label: 'YouTube' },
+  { icon: NewTwitterIcon, href: '#', label: 'X' },
+  { icon: InternetIcon, href: '#', label: 'Website' },
 ];
 
 export function Footer() {
@@ -27,7 +27,7 @@ export function Footer() {
               className="text-zinc-400 transition-colors hover:text-white"
               aria-label={social.label}
             >
-              <HugeiconsIcon icon={social.icon} className="size-5" />
+              <HugeiconsIcon icon={social.icon} style={{ width: 24, height: 24 }} />
             </Link>
           ))}
         </div>

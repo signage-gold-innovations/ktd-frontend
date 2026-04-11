@@ -125,7 +125,7 @@ export function CompanyShowcase({ name, description, socialLinks }: CompanyShowc
         </div>
 
         {/* Image cards row with arrow button */}
-        <div className="mt-10 flex items-center gap-4">
+        <div className="relative mt-10">
           {/* Scrollable container */}
           <div
             ref={scrollRef}
@@ -155,7 +155,7 @@ export function CompanyShowcase({ name, description, socialLinks }: CompanyShowc
           </div>
           <button
             onClick={scrollRight}
-            className="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full bg-[#4b4b4b] text-white shadow-md hover:bg-[#5a5a5a]"
+            className="absolute top-1/2 right-4 flex h-[56px] w-[56px] -translate-y-1/2 items-center justify-center rounded-full bg-[#4b4b4b] text-white shadow-md hover:bg-[#5a5a5a]"
             aria-label="Scroll right"
           >
             <HugeiconsIcon icon={ArrowRightIcon} className="size-5" />
