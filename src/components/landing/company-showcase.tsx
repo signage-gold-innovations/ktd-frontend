@@ -58,7 +58,7 @@ export function CompanyShowcase({ name, description, socialLinks }: CompanyShowc
     } catch {}
   }
 
-  function onPointerLeave(e: React.PointerEvent<HTMLDivElement>) {
+  function onPointerLeave() {
     isDownRef.current = false;
     setIsDragging(false);
   }

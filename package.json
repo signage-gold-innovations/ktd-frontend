@@ -9,6 +9,15 @@
     "lint": "eslint",
     "prepare": "husky"
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,mjs}": [
+      "prettier --write"
+    ]
+  },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
     "@hookform/resolvers": "^5.2.2",
@@ -42,6 +51,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
     "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "prettier": "3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4",
