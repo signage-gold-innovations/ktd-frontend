@@ -4,6 +4,37 @@ All notable changes to this project are documented here. Follow semantic version
 
 ---
 
+## [2026-04-25] Admin CMS UI, Auth Screen & Architecture Refactor
+
+### Added 🆕
+
+- Admin login page at `/admin/login` — email/password auth via Supabase client
+- Protected admin dashboard at `/admin` with sidebar navigation and header
+- Admin layout using Next.js route groups: `(protected)` for auth-gated pages, login outside
+- Placeholder pages for Pages, Content, Media, and Settings sections
+- Shared `AdminPageHeader` component for consistent page titles across admin
+- Shared `StatCard` component for dashboard metric cards
+- `src/services/auth.ts` — shared `getAuthUser()` helper to avoid repeating `createClient` + `getUser` across server components
+- `src/services/admin.ts` — `checkAdminAccess()`, `getAdminRole()`, `validateAdminMiddleware()` with optional userId param to skip redundant network calls
+- `src/components/admin/sidebar.tsx` — sidebar nav with active route highlighting
+- `src/components/admin/header.tsx` — top bar with sign-out button
+
+### Changed 🔄
+
+- Moved data-fetching/business logic from `src/lib/supabase/` to `src/services/` — `src/lib/supabase/` now only holds client setup (`client.ts`, `server.ts`)
+- Refactored `checkAdminAccess()` and `getAdminRole()` to accept optional `userId` param, eliminating redundant `getUser()` calls when the caller already has the user
+- Dashboard page no longer calls `getUser()` directly — uses shared `getAuthUser()` from services
+
+### Architecture
+
+- `src/lib/supabase/` — Supabase client setup only
+- `src/services/` — server-side data-fetching and business logic
+- `src/components/admin/` — shared admin UI components
+- `src/app/admin/login/` — public login page (no auth required)
+- `src/app/admin/(protected)/` — auth-gated admin pages with sidebar layout
+
+---
+
 ## [2026-04-25] Middleware Update — Align with Latest Supabase SSR Standard
 
 ### Fixed 🐛
