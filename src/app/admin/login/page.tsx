@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Spinner } from '@/components/ui/spinner';
 
 import { createClient } from '@/lib/supabase/client';
 
@@ -16,7 +17,7 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -75,7 +76,8 @@ export default function AdminLoginPage() {
                 placeholder="••••••••"
               />
             </div>
-            <Button type="submit" disabled={loading} className="mt-2 w-full">
+            <Button type="submit" disabled={loading} className="mt-2 w-full cursor-pointer">
+              {loading && <Spinner />}
               {loading ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>

@@ -4,6 +4,29 @@ All notable changes to this project are documented here. Follow semantic version
 
 ---
 
+## [2026-04-25] Admin UI Polish & Optimization
+
+### Added 🆕
+
+- `EmptyState` shared component — replaces duplicated empty-state card pattern across Pages, Content, Media, and Settings
+- `Spinner` shared component (`src/components/ui/spinner.tsx`) — consistent loading indicator
+- Loading states on sign-in and sign-out buttons with spinner + text feedback
+- Solar Icons (`solar-icon-set`) — BoldDuotone style for nav/actions, LineDuotone for hamburger menu
+- Collapsible/expandable sidebar with smooth width transition and fade-in text
+- Mobile sidebar with slide-out drawer and overlay
+- Sidebar state managed via Zustand store (`src/stores/sidebar.ts`)
+
+### Changed 🔄
+
+- Replaced emoji icons with Solar Icon Set (BoldDuotone style) across sidebar and header
+- Sidebar collapse button uses rectangular nav-item style (not circular icon button)
+- All interactive buttons now use `cursor-pointer`
+- Sidebar title, nav labels, and email fade in after width transition completes (no text-wrapping glitch)
+- 4 placeholder pages refactored to use shared `EmptyState` component
+- Fixed deprecated `React.FormEvent` → `React.FormEvent<HTMLFormElement>` in login page
+
+---
+
 ## [2026-04-25] Pre-commit Auto-formatting with lint-staged
 
 ### Added 🆕
