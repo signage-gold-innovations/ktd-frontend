@@ -4,6 +4,20 @@ All notable changes to this project are documented here. Follow semantic version
 
 ---
 
+## [2026-04-25] Pre-commit Auto-formatting with lint-staged
+
+### Added 🆕
+
+- `lint-staged` — runs Prettier and ESLint auto-fix on staged files before each commit
+- Pre-commit now formats `*.{ts,tsx,js,jsx}` with ESLint fix + Prettier, and `*.{json,md,css,mjs}` with Prettier
+- Tailwind class sorting and import ordering applied automatically via existing Prettier plugins
+
+### Changed 🔄
+
+- `.husky/pre-commit` — replaced `npm run lint` with `npx lint-staged` for targeted, faster pre-commit checks
+
+---
+
 ## [2026-04-25] Admin CMS UI, Auth Screen & Architecture Refactor
 
 ### Added 🆕
@@ -85,7 +99,7 @@ Completed comprehensive audit of all Supabase implementations using MCP tools. A
 ### Security Improvements
 
 - ✅ All files use secure cookie flags (`secure`, `httpOnly`, `sameSite`)
-- ✅ Environment variables properly separated (NEXT_PUBLIC_* vs SECRET)
+- ✅ Environment variables properly separated (NEXT*PUBLIC*\* vs SECRET)
 - ✅ No hardcoded secrets in any file
 - ✅ RLS policies ready for admin_users table
 - ✅ TypeScript safety enforced throughout
