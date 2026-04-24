@@ -1,0 +1,95 @@
+import { NextResponse, type NextRequest } from 'next/server';
+
+import { createServerClient } from '@supabase/ssr';
+
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({
+    request,
+  });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          supabaseResponse = NextResponse.next({
+            request,
+          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+
+  // Do not run code between createServerClient and
+  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
+
+  // IMPORTANT: getClaims() validates the JWT signature against the project's
+  // published public keys every time. Never use getSession() in server code —
+  // it isn't guaranteed to revalidate the Auth token.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims;
+
+  const pathname = request.nextUrl.pathname;
+
+  // Allow access to auth routes without authentication
+  if (
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/admin/login')
+  ) {
+    return supabaseResponse;
+  }
+
+  // Protect admin routes - require authentication
+  if (pathname.startsWith('/admin')) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin/login';
+      return NextResponse.redirect(url);
+    }
+
+    // Check admin role from database (RLS)
+    // Uncomment after creating the admin_users table:
+    /*
+    const { data: adminUser, error: adminError } = await supabase
+      .from('admin_users')
+      .select('is_admin')
+      .eq('id', user.sub)
+      .single()
+
+    if (adminError || !adminUser?.is_admin) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/unauthorized'
+      return NextResponse.redirect(url)
+    }
+    */
+  }
+
+  // IMPORTANT: You *must* return the supabaseResponse object as it is.
+  // If you're creating a new response object with NextResponse.next() make sure to:
+  // 1. Pass the request in it, like so:
+  //    const myNewResponse = NextResponse.next({ request })
+  // 2. Copy over the cookies, like so:
+  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+  // 3. Change the myNewResponse object to fit your needs, but avoid changing
+  //    the cookies!
+  // 4. Finally:
+  //    return myNewResponse
+  // If this is not done, you may be causing the browser and server to go out
+  // of sync and terminate the user's session prematurely!
+
+  return supabaseResponse;
+}
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+};
