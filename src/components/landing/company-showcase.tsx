@@ -1,26 +1,56 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { useLanguage } from '@/contexts/language-context';
 import {
   ArrowRightIcon,
   FacebookIcon,
   InstagramIcon,
   InternetIcon,
 } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
+
+interface LocalizedString {
+  en: string;
+  th: string;
+}
 
 interface CompanyShowcaseProps {
-  name: string;
-  description: string;
+  name: LocalizedString;
+  description: LocalizedString;
+  bgColor?: string;
   socialLinks: {
     facebook?: string;
     instagram?: string;
     website?: string;
   };
+  images?: string[];
 }
 
-export function CompanyShowcase({ name, description, socialLinks }: CompanyShowcaseProps) {
+const PLACEHOLDER_SLOTS = ['slot-0', 'slot-1', 'slot-2', 'slot-3', 'slot-4', 'slot-5'] as const;
+
+export function CompanyShowcase({
+  name,
+  description,
+  bgColor,
+  socialLinks,
+  images,
+}: Readonly<CompanyShowcaseProps>) {
+  const { t, language } = useLanguage();
+  let nameText: string;
+  if (typeof name === 'string') {
+    nameText = name;
+  } else {
+    nameText = language === 'th' ? name.th : name.en;
+  }
+  let descriptionText: string;
+  if (typeof description === 'string') {
+    descriptionText = description;
+  } else {
+    descriptionText = language === 'th' ? description.th : description.en;
+  }
   const scrollRef = useRef<HTMLDivElement>(null);
   const isDownRef = useRef(false);
   const startXRef = useRef(0);
@@ -72,56 +102,123 @@ export function CompanyShowcase({ name, description, socialLinks }: CompanyShowc
     }
   }
   return (
-    <section className="relative py-[60px] md:py-[80px]" style={{ backgroundColor: '#1D1D1D' }}>
-      <div className="w-full px-4 md:px-[72px]">
+    <section className="relative py-15 md:py-20" style={{ background: bgColor ?? '#1D1D1D' }}>
+      <div className="w-full px-4 md:px-18">
         {/* Heading — inline white bg */}
         <h2
-          className="inline-block bg-white px-4 py-2 text-[32px] leading-[100%] font-[700] text-black md:px-5 md:py-3 md:text-[40px]"
-          style={{ fontFamily: 'var(--font-anuphan)' }}
+          className="w-full capitalize md:text-[40px]"
+          style={{
+            fontFamily: 'var(--font-anuphan)',
+            fontWeight: 600,
+            fontStyle: 'normal',
+            fontSize: '36px',
+            lineHeight: '100%',
+            letterSpacing: '0%',
+            color: '#FFFFFF',
+          }}
         >
-          {name}
+          {nameText}
         </h2>
 
         {/* Description */}
         <p
-          className="mt-6 max-w-4xl text-[16px] leading-[170%] text-[#969696] md:text-[18px]"
-          style={{ fontFamily: 'var(--font-anuphan)', fontWeight: 400 }}
+          className="mt-6 text-[20px] md:text-[20px]"
+          style={{
+            fontFamily: 'var(--font-anuphan)',
+            fontWeight: 500,
+            fontStyle: 'normal',
+            fontSize: '20px',
+            lineHeight: '100%',
+            letterSpacing: '0%',
+            color: '#C7C7C7',
+          }}
         >
-          {description}
+          {descriptionText}
         </p>
 
-        {/* Social links — pill badges with white border */}
+        {/* Social links — render by mapping, using the Instagram style as baseline */}
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          {socialLinks.facebook && (
-            <Link
-              href={socialLinks.facebook}
-              className="inline-flex items-center gap-2 bg-[#373737] px-4 py-2 text-[16px] text-white transition-colors hover:bg-white/10"
-              style={{ fontFamily: 'var(--font-anuphan)', fontWeight: 500 }}
-            >
-              <HugeiconsIcon icon={FacebookIcon} className="size-6" />
-              Facebook
-            </Link>
-          )}
-          {socialLinks.instagram && (
-            <Link
-              href={socialLinks.instagram}
-              className="inline-flex items-center gap-2 bg-[#373737] px-4 py-2 text-[16px] text-white transition-colors hover:bg-white/10"
-              style={{ fontFamily: 'var(--font-anuphan)', fontWeight: 500 }}
-            >
-              <HugeiconsIcon icon={InstagramIcon} className="size-6" />
-              Instagram
-            </Link>
-          )}
-          {socialLinks.website && (
-            <Link
-              href={socialLinks.website}
-              className="inline-flex items-center gap-2 bg-[#373737] px-4 py-2 text-[16px] text-white transition-colors hover:bg-white/10"
-              style={{ fontFamily: 'var(--font-anuphan)', fontWeight: 500 }}
-            >
-              <HugeiconsIcon icon={InternetIcon} className="size-6" />
-              Website
-            </Link>
-          )}
+          {(() => {
+            const basePillStyle: React.CSSProperties = {
+              fontFamily: 'var(--font-anuphan)',
+              fontWeight: 500,
+              height: '52px',
+              gap: '10px',
+              borderRadius: '8px',
+              background: 'rgba(18,18,18,0.28)',
+              border: '1px solid rgba(255,255,255,0.14)',
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)',
+              boxShadow: '0 6px 18px rgba(0,0,0,0.25)',
+              opacity: 1,
+              paddingTop: '2px',
+              paddingRight: '2px',
+              paddingBottom: '2px',
+              paddingLeft: '12px',
+              width: '157px',
+            };
+
+            const iconBlockStyle: React.CSSProperties = {
+              width: '56px',
+              height: '48px',
+              borderRadius: '6px',
+              background: 'linear-gradient(180deg, #A92DFF 0%, #7600D8 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            };
+
+            type SocialItem = { key: string; label: string; href: string; icon: IconSvgElement };
+            const items: SocialItem[] = [];
+            if (socialLinks.website)
+              items.push({
+                key: 'website',
+                label: t.social.website,
+                href: socialLinks.website,
+                icon: InternetIcon,
+              });
+            if (socialLinks.facebook)
+              items.push({
+                key: 'facebook',
+                label: t.social.facebook,
+                href: socialLinks.facebook,
+                icon: FacebookIcon,
+              });
+            if (socialLinks.instagram)
+              items.push({
+                key: 'instagram',
+                label: t.social.instagram,
+                href: socialLinks.instagram,
+                icon: InstagramIcon,
+              });
+
+            return items.map((it) => (
+              <Link
+                key={it.key}
+                href={it.href}
+                className="inline-flex items-center overflow-hidden transition-opacity hover:opacity-80"
+                style={{
+                  ...basePillStyle,
+                }}
+              >
+                <span
+                  className="flex flex-1 items-center justify-center text-[16px] text-white"
+                  style={{
+                    fontFamily: 'var(--font-anuphan)',
+                    fontWeight: 600,
+                    fontSize: '16px',
+                    lineHeight: '140%',
+                    color: '#FFFFFF',
+                  }}
+                >
+                  {it.label}
+                </span>
+                <span style={iconBlockStyle}>
+                  <HugeiconsIcon icon={it.icon} className="size-6 text-white" />
+                </span>
+              </Link>
+            ));
+          })()}
         </div>
 
         {/* Image cards row with arrow button */}
@@ -134,31 +231,46 @@ export function CompanyShowcase({ name, description, socialLinks }: CompanyShowc
             onPointerUp={onPointerUp}
             onPointerLeave={onPointerLeave}
             onWheel={onWheel}
-            className={`flex gap-[10px] overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+            className={`flex gap-2.5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
               isDragging ? 'cursor-grabbing' : 'cursor-grab'
             }`}
           >
-            {['#FFFFFF', '#656565', '#FFFFFF', '#656565', '#FFFFFF', '#656565'].map((color, i) => {
+            {(images && images.length > 0
+              ? images.map((src) => ({ src, id: src }))
+              : PLACEHOLDER_SLOTS.map((id) => ({ src: '', id }))
+            ).map(({ src, id }, i) => {
               const isWide = i % 2 === 0;
-              return (
+              const cardStyle = {
+                width: isWide ? '434px' : '311px',
+                height: '244px',
+                borderRadius: '8px',
+              };
+              return src ? (
+                <Image
+                  key={id}
+                  src={src}
+                  alt={`${nameText} ${i + 1}`}
+                  width={isWide ? 434 : 311}
+                  height={244}
+                  className="shrink-0 object-cover"
+                  style={{ ...cardStyle, flexShrink: 0 }}
+                  draggable={false}
+                />
+              ) : (
                 <div
-                  key={i}
-                  className="shrink-0 p-[40px]"
-                  style={{
-                    width: isWide ? '434px' : '311px',
-                    height: '244px',
-                    backgroundColor: color,
-                  }}
+                  key={id}
+                  className="shrink-0"
+                  style={{ ...cardStyle, backgroundColor: i % 2 === 0 ? '#FFFFFF' : '#656565' }}
                 />
               );
             })}
           </div>
           <button
             onClick={scrollRight}
-            className="absolute top-1/2 right-4 flex h-[56px] w-[56px] -translate-y-1/2 items-center justify-center rounded-full bg-[#4b4b4b] text-white shadow-md hover:bg-[#5a5a5a]"
+            className="absolute top-1/2 right-4 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-[#4b4b4b] text-white shadow-md hover:bg-[#5a5a5a]"
             aria-label="Scroll right"
           >
-            <HugeiconsIcon icon={ArrowRightIcon} className="size-5" />
+            <HugeiconsIcon icon={ArrowRightIcon} className="size-6" />
           </button>
         </div>
       </div>

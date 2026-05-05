@@ -16,7 +16,7 @@ const socialIcons = [
 
 export function Footer() {
   return (
-    <footer className="bg-zinc-900 py-8">
+    <footer className="bg-black py-8">
       <div className="container mx-auto flex flex-col items-center gap-4 px-4 md:px-8">
         <p className="text-sm text-zinc-400">©2025. All rights reserved.</p>
         <div className="flex items-center gap-4">
