@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/language-context';
 import { Globe02Icon, MenuIcon } from '@hugeicons/core-free-icons';
@@ -15,6 +16,12 @@ const NAV_HREFS = [
   { key: 'contact' as const, href: '#contact' },
 ];
 
+const SIDEBAR_COMPANIES = [
+  { key: 'hiterratech' as const, href: '#hiterratech' },
+  { key: 'silachai' as const, href: '#silachai' },
+  { key: 'kitthana' as const, href: '#kitthana' },
+];
+
 export function Navbar() {
   const { language, toggle, t } = useLanguage();
 
@@ -23,36 +30,101 @@ export function Navbar() {
       <div className="flex h-[54px] w-full items-center gap-3 px-6 py-3 md:h-[68px] md:px-10">
         {/* Mobile/all-screen hamburger menu */}
         <Sheet>
-          <SheetTrigger render={<Button variant="ghost" size="icon" className="text-white" />}>
+          <SheetTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-none text-white hover:bg-transparent! focus-visible:border-transparent focus-visible:ring-0"
+              />
+            }
+          >
             <HugeiconsIcon icon={MenuIcon} className="size-5" />
             <span className="sr-only">Toggle menu</span>
           </SheetTrigger>
-          <SheetContent side="left" className="w-64 bg-black text-white">
-            <SheetHeader className="flex items-center justify-center">
-              <SheetTitle
-                className="text-center text-white"
-                style={{
-                  fontFamily: 'var(--font-anuphan)',
-                  fontWeight: 700,
-                  fontSize: '24px',
-                  lineHeight: '120%',
-                  letterSpacing: '0%',
-                }}
-              >
-                {t.nav.companyName}
-              </SheetTitle>
-            </SheetHeader>
-            <nav className="mt-6 flex flex-col gap-4 px-4">
-              {NAV_HREFS.map((link) => (
-                <Link
-                  key={link.key}
-                  href={link.href}
-                  className="text-sm text-white/80 transition-colors hover:text-white"
-                >
-                  {t.nav[link.key]}
-                </Link>
+          <SheetContent
+            side="left"
+            showCloseButton={false}
+            className="flex w-64 flex-col border-0 bg-transparent! text-white backdrop-blur-2xl data-[side=left]:border-r-0"
+            style={{
+              background:
+                'linear-gradient(0deg, rgba(18, 18, 18, 0.3), rgba(18, 18, 18, 0.3)), linear-gradient(0deg, rgba(118, 0, 216, 0.25) 0.28%, rgba(26, 0, 47, 0.15) 95.99%)',
+            }}
+          >
+            {/* Companies list */}
+            <div className="mx-[28px] my-[36px] flex flex-col">
+              {SIDEBAR_COMPANIES.map((company, i) => (
+                <div key={company.key}>
+                  <Link
+                    href={company.href}
+                    className="flex items-center justify-between px-6 py-4 transition-colors hover:bg-white/5"
+                  >
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-anuphan)',
+                        fontWeight: 'bold',
+                        fontSize: '18px',
+                        lineHeight: '140%',
+                        color: '#FFFFFF',
+                      }}
+                    >
+                      {t.companies[company.key].name}
+                    </span>
+                    <Image
+                      src="/assets/icon/sidebar-square.png"
+                      alt="navigate"
+                      width={24}
+                      height={24}
+                      className="size-6 object-contain"
+                    />
+                  </Link>
+                  <div className="border-t border-white/20" />
+                </div>
               ))}
-            </nav>
+            </div>
+
+            {/* Social icons bottom-left */}
+            <div className="mt-auto flex items-center gap-4 px-10 pb-10">
+              <Link
+                href="#"
+                aria-label="Facebook"
+                className="opacity-70 transition-opacity hover:opacity-100"
+              >
+                <Image
+                  src="/assets/icon/logo-fb.png"
+                  alt="Facebook"
+                  width={24}
+                  height={24}
+                  className="size-6 object-contain"
+                />
+              </Link>
+              <Link
+                href="#"
+                aria-label="Instagram"
+                className="opacity-70 transition-opacity hover:opacity-100"
+              >
+                <Image
+                  src="/assets/icon/logo-ig.png"
+                  alt="Instagram"
+                  width={24}
+                  height={24}
+                  className="size-6 object-contain"
+                />
+              </Link>
+              <Link
+                href="#"
+                aria-label="Website"
+                className="opacity-70 transition-opacity hover:opacity-100"
+              >
+                <Image
+                  src="/assets/icon/logo-web.png"
+                  alt="Website"
+                  width={24}
+                  height={24}
+                  className="size-6 object-contain"
+                />
+              </Link>
+            </div>
           </SheetContent>
         </Sheet>
 

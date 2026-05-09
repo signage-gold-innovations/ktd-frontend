@@ -15,11 +15,10 @@ export function Hero() {
 
       <div className="relative z-10 mx-4 pt-[411px] pb-[54px] md:mx-[130px] md:pt-[280px] md:pb-[220px]">
         <h1
-          className="text-white"
+          className="text-[36px] text-white md:text-[64px]"
           style={{
             fontFamily: 'var(--font-anuphan)',
             fontWeight: 700,
-            fontSize: '64px',
             lineHeight: '100%',
             letterSpacing: '0%',
           }}
@@ -27,12 +26,10 @@ export function Hero() {
           <span className="mb-8 block">{t.hero.title}</span>
         </h1>
         <p
-          className="mb-0 text-[#F3F3F3]"
+          className="mb-0 text-[20px] leading-[24px] text-[#F3F3F3] md:text-[32px] md:leading-[32px]"
           style={{
             fontFamily: 'var(--font-anuphan)',
             fontWeight: 300,
-            fontSize: '32px',
-            lineHeight: '32px',
             letterSpacing: '0%',
           }}
         >

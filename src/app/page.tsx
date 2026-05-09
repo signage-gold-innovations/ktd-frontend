@@ -59,7 +59,8 @@ const companies = [
       en: translations.en.companies.kitthana.name,
       th: translations.th.companies.kitthana.name,
     },
-    bgColor: 'linear-gradient(180deg, #010214 0%, #39005D 100%)',
+    bgColor: '#000000',
+    bottomImage: '/assets/companies/kitthana/company-bottom.png',
     description: {
       en: translations.en.companies.kitthana.description,
       th: translations.th.companies.kitthana.description,

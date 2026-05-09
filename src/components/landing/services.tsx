@@ -1,72 +1,117 @@
-const services = [
-  {
-    color: '#D9D9D9',
-    label: 'HITERRATECH (SATELLITE DATA)',
-    description: 'บริการข้อมูลภาพถ่ายดาวเทียม วิเคราะห์พื้นที่ Geospatial',
-  },
-  {
-    color: '#707070',
-    label: 'ศิลาชัยเจริญ (ROCK QUARRY)',
-    description: 'ผลิตและจำหน่ายหินก่อสร้างทุกชนิด กระบวนการที่ได้มาตรฐาน',
-  },
-  {
-    color: '#D9D9D9',
-    label: 'กิจธนากรัพย์ (BRICK FACTORY)',
-    description: 'ผลิตอิฐบล็อกคุณภาพสูง รองรับงานโครงการก่อสร้างทุกระดับ',
-  },
+'use client';
+
+import Image from 'next/image';
+import { useLanguage } from '@/contexts/language-context';
+
+const serviceImages = [
+  '/assets/services/service1.jpg',
+  '/assets/services/service2.jpg',
+  '/assets/services/service3.png',
 ];
 
 export function Services() {
+  const { t } = useLanguage();
+  const s = t.services;
+
+  const services = [
+    { image: serviceImages[0], label: s.card1Label, description: s.card1Desc },
+    { image: serviceImages[1], label: s.card2Label, description: s.card2Desc },
+    { image: serviceImages[2], label: s.card3Label, description: s.card3Desc },
+  ];
+
   return (
     <section
       id="services"
       style={{ backgroundColor: '#000000' }}
-      className="py-[60px] md:py-[120px]"
+      className="relative overflow-hidden py-[60px] md:py-[120px]"
     >
-      <div className="w-full px-4 md:px-[72px]">
+      {/* Background decorations */}
+      <Image
+        src="/assets/services/service-bottom-left.png"
+        alt=""
+        width={400}
+        height={400}
+        className="pointer-events-none absolute bottom-0 left-0 hidden md:block"
+        style={{ zIndex: 0 }}
+      />
+      <Image
+        src="/assets/services/service-bottom.png"
+        alt=""
+        width={1440}
+        height={200}
+        className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2"
+        style={{ zIndex: 0 }}
+      />
+      <Image
+        src="/assets/services/service-top-right.png"
+        alt=""
+        width={400}
+        height={400}
+        className="pointer-events-none absolute top-0 right-0 hidden md:block"
+        style={{ zIndex: 0 }}
+      />
+      <div className="relative z-10 w-full px-4 md:px-[72px]">
         <h2
-          className="inline-block bg-white px-4 py-2 text-[40px] leading-[100%] font-[500] text-black md:px-6 md:py-3 md:text-[56px]"
-          style={{ fontFamily: 'var(--font-anuphan)', letterSpacing: '0%' }}
+          style={{
+            fontFamily: 'var(--font-anuphan)',
+            fontWeight: 600,
+            fontSize: '36px',
+            lineHeight: '100%',
+            letterSpacing: '0%',
+            textTransform: 'capitalize',
+            color: '#ffffff',
+          }}
         >
-          Our Services
+          {s.title}
         </h2>
-        {/* Service cards: horizontal scroll on xs, grid on sm+ */}
 
-        <div className="-mx-4 mt-10 flex gap-6 overflow-x-auto px-4 pb-4 sm:-mx-0 sm:grid sm:grid-cols-3 sm:gap-8 sm:px-0">
+        {/* Service cards: horizontal scroll on xs, grid on sm+ */}
+        <div className="mt-10 flex flex-col gap-[10px] md:grid md:grid-cols-3">
           {services.map((service) => (
             <div
               key={service.label}
-              className="flex min-w-[320px] flex-shrink-0 flex-col sm:min-w-0"
+              className="flex w-full flex-shrink-0 flex-col gap-[10px] rounded-[8px] p-4"
+              style={{
+                height: '471px',
+                background:
+                  'linear-gradient(0deg, rgba(18, 18, 18, 0.5), rgba(18, 18, 18, 0.5)), linear-gradient(0deg, rgba(118, 0, 216, 0.2) 0.28%, rgba(26, 0, 47, 0.2) 95.99%)',
+              }}
             >
-              {/* Circle */}
+              {/* Image */}
               <div
-                className="mx-auto h-[320px] w-[320px] rounded-full border border-[#ffffff1a]"
-                style={{ backgroundColor: service.color }}
-              />
-
-              {/* Label row */}
-              <div className="mt-6 flex items-center justify-between gap-4">
-                {/* Badge */}
-                <span
-                  className="inline-flex items-center rounded-[5px] border border-white px-[8px] py-[4px] text-[13px] leading-[100%] text-white md:px-[10px] md:py-[6px] md:text-[15px]"
-                  style={{ fontFamily: 'var(--font-anuphan)', fontWeight: 400, gap: '4px' }}
-                >
-                  {service.label}
-                </span>
-
-                {/* View More */}
-                <span
-                  className="shrink-0 text-[16px] leading-[100%] text-white md:text-[20px]"
-                  style={{ fontFamily: 'var(--font-manrope)', fontWeight: 600 }}
-                >
-                  View More
-                </span>
+                className="relative mb-4 w-full overflow-hidden rounded-[8px]"
+                style={{ height: '345px' }}
+              >
+                <Image src={service.image} alt={service.label} fill className="object-cover" />
               </div>
+
+              {/* Label */}
+              <span
+                className="inline-flex w-fit items-center rounded-[5px] border px-[8px] py-[4px] uppercase"
+                style={{
+                  fontFamily: 'var(--font-anuphan)',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  lineHeight: '16px',
+                  letterSpacing: '0.12px',
+                  color: '#C067FF',
+                  borderColor: '#C067FF',
+                  fontVariantNumeric: 'lining-nums tabular-nums',
+                }}
+              >
+                {service.label}
+              </span>
 
               {/* Description */}
               <p
-                className="mt-3 text-[16px] leading-[100%] text-[#868686] md:mt-4 md:text-[18px] md:leading-[160%]"
-                style={{ fontFamily: 'var(--font-anuphan)', fontWeight: 400 }}
+                style={{
+                  fontFamily: 'var(--font-anuphan)',
+                  fontWeight: 400,
+                  fontSize: '16px',
+                  lineHeight: '100%',
+                  letterSpacing: '0%',
+                  color: '#C7C7C7',
+                }}
               >
                 {service.description}
               </p>

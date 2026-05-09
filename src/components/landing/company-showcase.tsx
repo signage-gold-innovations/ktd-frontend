@@ -4,13 +4,8 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/language-context';
-import {
-  ArrowRightIcon,
-  FacebookIcon,
-  InstagramIcon,
-  InternetIcon,
-} from '@hugeicons/core-free-icons';
-import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
+import { ArrowRightIcon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 
 interface LocalizedString {
   en: string;
@@ -21,6 +16,7 @@ interface CompanyShowcaseProps {
   name: LocalizedString;
   description: LocalizedString;
   bgColor?: string;
+  bottomImage?: string;
   socialLinks: {
     facebook?: string;
     instagram?: string;
@@ -35,6 +31,7 @@ export function CompanyShowcase({
   name,
   description,
   bgColor,
+  bottomImage,
   socialLinks,
   images,
 }: Readonly<CompanyShowcaseProps>) {
@@ -102,7 +99,10 @@ export function CompanyShowcase({
     }
   }
   return (
-    <section className="relative py-15 md:py-20" style={{ background: bgColor ?? '#1D1D1D' }}>
+    <section
+      className="relative overflow-hidden py-15 md:py-20"
+      style={{ background: bgColor ?? '#1D1D1D' }}
+    >
       <div className="w-full px-4 md:px-18">
         {/* Heading — inline white bg */}
         <h2
@@ -168,28 +168,28 @@ export function CompanyShowcase({
               justifyContent: 'center',
             };
 
-            type SocialItem = { key: string; label: string; href: string; icon: IconSvgElement };
+            type SocialItem = { key: string; label: string; href: string; iconSrc: string };
             const items: SocialItem[] = [];
             if (socialLinks.website)
               items.push({
                 key: 'website',
                 label: t.social.website,
                 href: socialLinks.website,
-                icon: InternetIcon,
+                iconSrc: '/assets/icon/logo-web.png',
               });
             if (socialLinks.facebook)
               items.push({
                 key: 'facebook',
                 label: t.social.facebook,
                 href: socialLinks.facebook,
-                icon: FacebookIcon,
+                iconSrc: '/assets/icon/logo-fb.png',
               });
             if (socialLinks.instagram)
               items.push({
                 key: 'instagram',
                 label: t.social.instagram,
                 href: socialLinks.instagram,
-                icon: InstagramIcon,
+                iconSrc: '/assets/icon/logo-ig.png',
               });
 
             return items.map((it) => (
@@ -214,7 +214,13 @@ export function CompanyShowcase({
                   {it.label}
                 </span>
                 <span style={iconBlockStyle}>
-                  <HugeiconsIcon icon={it.icon} className="size-6 text-white" />
+                  <Image
+                    src={it.iconSrc}
+                    alt={it.label}
+                    width={24}
+                    height={24}
+                    className="size-6 object-contain"
+                  />
                 </span>
               </Link>
             ));
@@ -222,7 +228,7 @@ export function CompanyShowcase({
         </div>
 
         {/* Image cards row with arrow button */}
-        <div className="relative mt-10">
+        <div className="relative z-10 mt-10">
           {/* Scrollable container */}
           <div
             ref={scrollRef}
@@ -274,6 +280,16 @@ export function CompanyShowcase({
           </button>
         </div>
       </div>
+      {/* Bottom decorative image */}
+      {bottomImage && (
+        <Image
+          src={bottomImage}
+          alt=""
+          width={1440}
+          height={300}
+          className="pointer-events-none absolute bottom-0 left-0 w-full object-cover"
+        />
+      )}
     </section>
   );
 }
