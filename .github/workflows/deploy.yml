@@ -54,7 +54,11 @@ jobs:
           PREVIEW_URL: ${{ steps.deploy.outputs.preview_url }}
           TAG_NAME: ${{ github.ref_name }}
           COMMIT_SHA: ${{ github.sha }}
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_PREVIEW }}
         run: |
+          echo "Webhook URL length: ${#WEBHOOK}"
+          echo "Preview URL: $PREVIEW_URL"
+
           cat > discord_payload.json <<'EOF'
           {
             "thread_name": "Preview Deployment - $TAG_NAME",
@@ -109,7 +113,8 @@ jobs:
           }
           EOF
 
-          curl -s -X POST ${{ secrets.DISCORD_WEBHOOK_PREVIEW }} \
+          echo "Sending to Discord..."
+          curl -v -X POST "$WEBHOOK" \
             -H 'Content-Type: application/json' \
             -d @discord_payload.json
 
