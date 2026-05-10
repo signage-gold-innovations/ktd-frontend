@@ -50,55 +50,68 @@ jobs:
           echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
       - name: Notify Discord - Preview
         if: success()
+        env:
+          PREVIEW_URL: ${{ steps.deploy.outputs.preview_url }}
+          TAG_NAME: ${{ github.ref_name }}
+          COMMIT_SHA: ${{ github.sha }}
         run: |
-          curl -X POST ${{ secrets.DISCORD_WEBHOOK_PREVIEW }} \
-            -H 'Content-Type: application/json' \
-            -d '{
-              "thread_name": "Preview Deployment - ${{ github.ref_name }}",
-              "embeds": [{
-                "title": "🚀 Preview Deployment Ready",
-                "description": "New preview build is live!",
-                "color": 3066993,
-                "fields": [{
+          cat > discord_payload.json <<'EOF'
+          {
+            "thread_name": "Preview Deployment - $TAG_NAME",
+            "embeds": [{
+              "title": "🚀 Preview Deployment Ready",
+              "description": "New preview build is live!",
+              "color": 3066993,
+              "fields": [
+                {
                   "name": "Tag",
-                  "value": "`${{ github.ref_name }}`",
+                  "value": "`$TAG_NAME`",
                   "inline": true
-                }, {
+                },
+                {
                   "name": "Status",
                   "value": "✅ Success",
                   "inline": true
-                }, {
+                },
+                {
                   "name": "Preview URL",
-                  "value": "${{ steps.deploy.outputs.preview_url }}",
+                  "value": "$PREVIEW_URL",
                   "inline": false
-                }, {
+                },
+                {
                   "name": "Commit",
-                  "value": "`${{ github.sha }}`",
+                  "value": "`$COMMIT_SHA`",
                   "inline": true
-                }, {
+                },
+                {
                   "name": "Branch",
                   "value": "staging",
                   "inline": true
-                }, {
-                  "name": "Deployed At",
-                  "value": "'$(date -u +%Y-%m-%d\ %H:%M:%S)'",
-                  "inline": false
-                }],
-                "footer": {
-                  "text": "KTD Frontend - Preview"
-                },
-                "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
-              }],
-              "components": [{
+                }
+              ],
+              "footer": {
+                "text": "KTD Frontend - Preview"
+              }
+            }],
+            "components": [
+              {
                 "type": 1,
-                "components": [{
-                  "type": 2,
-                  "label": "View Preview",
-                  "style": 5,
-                  "url": "${{ steps.deploy.outputs.preview_url }}"
-                }]
-              }]
-            }'
+                "components": [
+                  {
+                    "type": 2,
+                    "label": "View Preview",
+                    "style": 5,
+                    "url": "$PREVIEW_URL"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+
+          curl -X POST ${{ secrets.DISCORD_WEBHOOK_PREVIEW }} \
+            -H 'Content-Type: application/json' \
+            -d @discord_payload.json
 
   deploy-production:
     name: Deploy Production
@@ -127,31 +140,56 @@ jobs:
           echo "production_url=$PRODUCTION_URL" >> $GITHUB_OUTPUT
       - name: Notify Discord - Production
         if: success()
+        env:
+          PRODUCTION_URL: ${{ steps.deploy_prod.outputs.production_url }}
+          TAG_NAME: ${{ github.ref_name }}
+          COMMIT_SHA: ${{ github.sha }}
         run: |
-          curl -X POST ${{ secrets.DISCORD_WEBHOOK_PRODUCTION }} \
-            -H 'Content-Type: application/json' \
-            -d '{
-              "embeds": [{
-                "title": "🎉 Production Deployment Successful",
-                "description": "Tag: ${{ github.ref_name }}",
-                "color": 15158332,
-                "fields": [{
+          cat > discord_payload.json <<'EOF'
+          {
+            "embeds": [{
+              "title": "🎉 Production Deployment Successful",
+              "description": "Tag: $TAG_NAME",
+              "color": 15158332,
+              "fields": [
+                {
                   "name": "Project",
                   "value": "KTD Frontend",
                   "inline": true
-                }, {
+                },
+                {
                   "name": "Environment",
                   "value": "Production",
                   "inline": true
-                }, {
+                },
+                {
                   "name": "Production URL",
-                  "value": "${{ steps.deploy_prod.outputs.production_url }}",
+                  "value": "$PRODUCTION_URL",
                   "inline": false
-                }, {
+                },
+                {
                   "name": "Commit",
-                  "value": "${{ github.sha }}",
+                  "value": "`$COMMIT_SHA`",
                   "inline": true
-                }],
-                "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
-              }]
-            }'
+                }
+              ]
+            }],
+            "components": [
+              {
+                "type": 1,
+                "components": [
+                  {
+                    "type": 2,
+                    "label": "View Production",
+                    "style": 5,
+                    "url": "$PRODUCTION_URL"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+
+          curl -X POST ${{ secrets.DISCORD_WEBHOOK_PRODUCTION }} \
+            -H 'Content-Type: application/json' \
+            -d @discord_payload.json
