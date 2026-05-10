@@ -109,7 +109,7 @@ jobs:
           }
           EOF
 
-          curl -X POST ${{ secrets.DISCORD_WEBHOOK_PREVIEW }} \
+          curl -s -X POST ${{ secrets.DISCORD_WEBHOOK_PREVIEW }} \
             -H 'Content-Type: application/json' \
             -d @discord_payload.json
 
