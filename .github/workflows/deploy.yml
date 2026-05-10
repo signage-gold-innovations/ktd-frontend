@@ -58,7 +58,7 @@ jobs:
         run: |
           cat > discord_payload.json <<EOF
           {
-            "thread_name": "Preview Deployment - $TAG_NAME",
+            "thread_name": "Preview $TAG_NAME",
             "embeds": [{
               "title": "🚀 Preview Deployment Ready",
               "description": "New preview build is live!",
