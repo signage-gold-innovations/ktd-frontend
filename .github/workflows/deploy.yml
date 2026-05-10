@@ -54,10 +54,11 @@ jobs:
           PREVIEW_URL: ${{ steps.deploy.outputs.preview_url }}
           TAG_NAME: ${{ github.ref_name }}
           COMMIT_SHA: ${{ github.sha }}
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_PREVIEW }}
         run: |
-          cat > discord_payload.json <<'EOF'
+          cat > discord_payload.json <<EOF
           {
-            "thread_name": "Preview Deployment - $TAG_NAME",
+            "thread_name": "Preview $TAG_NAME",
             "embeds": [{
               "title": "🚀 Preview Deployment Ready",
               "description": "New preview build is live!",
@@ -65,7 +66,7 @@ jobs:
               "fields": [
                 {
                   "name": "Tag",
-                  "value": "`$TAG_NAME`",
+                  "value": "\`$TAG_NAME\`",
                   "inline": true
                 },
                 {
@@ -80,7 +81,7 @@ jobs:
                 },
                 {
                   "name": "Commit",
-                  "value": "`$COMMIT_SHA`",
+                  "value": "\`$COMMIT_SHA\`",
                   "inline": true
                 },
                 {
@@ -92,24 +93,11 @@ jobs:
               "footer": {
                 "text": "KTD Frontend - Preview"
               }
-            }],
-            "components": [
-              {
-                "type": 1,
-                "components": [
-                  {
-                    "type": 2,
-                    "label": "View Preview",
-                    "style": 5,
-                    "url": "$PREVIEW_URL"
-                  }
-                ]
-              }
-            ]
+            }]
           }
           EOF
 
-          curl -s -X POST ${{ secrets.DISCORD_WEBHOOK_PREVIEW }} \
+          curl -s -X POST "$WEBHOOK" \
             -H 'Content-Type: application/json' \
             -d @discord_payload.json
 
