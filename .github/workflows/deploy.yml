@@ -3,8 +3,8 @@ name: Deploy to Vercel
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+-rc*'  # Preview: v1.0.0-rc, v1.0.0-rc.1, etc.
-      - 'v[0-9]+.[0-9]+.[0-9]+'      # Production: v1.0.0, v1.0.0-beta (non-rc)
+      - 'v[0-9]+\.[0-9]+\.[0-9]+-rc*'  # Preview: v1.0.0-rc, v1.0.0-rc.1, etc.
+      - 'v[0-9]+\.[0-9]+\.[0-9]+'      # Production: v1.0.0 (but not -rc, handled by condition)
 
 env:
   VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
