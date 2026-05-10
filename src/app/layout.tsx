@@ -3,6 +3,8 @@ import { Anuphan, Figtree, Geist, Geist_Mono, Manrope } from 'next/font/google';
 
 import './globals.css';
 
+import { LanguageProvider } from '@/contexts/language-context';
+
 import { cn } from '@/lib/utils';
 
 const figtree = Figtree({ subsets: ['latin'], variable: '--font-sans' });
@@ -53,7 +55,9 @@ export default function RootLayout({
         manrope.variable
       )}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }
