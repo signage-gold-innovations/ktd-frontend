@@ -106,13 +106,13 @@ export function CompanyShowcase({
       <div className="w-full px-4 md:px-18">
         {/* Heading — inline white bg */}
         <h2
-          className="w-full capitalize md:text-[40px]"
+          className="w-full capitalize md:text-[36px]"
           style={{
             fontFamily: 'var(--font-anuphan)',
             fontWeight: 600,
             fontStyle: 'normal',
-            fontSize: '36px',
-            lineHeight: '100%',
+            fontSize: '32px',
+            lineHeight: '120%',
             letterSpacing: '0%',
             color: '#FFFFFF',
           }}
@@ -122,13 +122,12 @@ export function CompanyShowcase({
 
         {/* Description */}
         <p
-          className="mt-6 text-[20px] md:text-[20px]"
+          className="mt-6 text-[16px] md:text-[18px] xl:text-[20px]"
           style={{
             fontFamily: 'var(--font-anuphan)',
             fontWeight: 500,
             fontStyle: 'normal',
-            fontSize: '20px',
-            lineHeight: '100%',
+            lineHeight: '140%',
             letterSpacing: '0%',
             color: '#C7C7C7',
           }}
@@ -202,11 +201,10 @@ export function CompanyShowcase({
                 }}
               >
                 <span
-                  className="flex flex-1 items-center justify-center text-[16px] text-white"
+                  className="flex flex-1 items-center justify-center text-[14px] text-white"
                   style={{
                     fontFamily: 'var(--font-anuphan)',
-                    fontWeight: 600,
-                    fontSize: '16px',
+                    fontWeight: 500,
                     lineHeight: '140%',
                     color: '#FFFFFF',
                   }}
@@ -286,8 +284,8 @@ export function CompanyShowcase({
           src={bottomImage}
           alt=""
           width={1440}
-          height={300}
-          className="pointer-events-none absolute bottom-0 left-0 w-full object-cover"
+          height={500}
+          className="pointer-events-none absolute bottom-0 left-0 h-1/2 w-full object-cover md:h-auto"
         />
       )}
     </section>
