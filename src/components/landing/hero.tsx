@@ -14,6 +14,17 @@ export function Hero() {
       </div>
 
       <div className="relative z-10 mx-4 pt-[411px] pb-[54px] md:mx-[130px] md:pt-[280px] md:pb-[220px]">
+        <p
+          className="mb-4 text-[18px] text-white/80 md:text-[20px]"
+          style={{
+            fontFamily: 'var(--font-anuphan)',
+            fontWeight: 700,
+            lineHeight: '120%',
+            letterSpacing: '0%',
+          }}
+        >
+          Tod Sirawattananon
+        </p>
         <h1
           className="text-[36px] text-white md:text-[64px]"
           style={{

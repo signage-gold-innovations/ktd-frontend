@@ -60,7 +60,7 @@ const companies = [
       th: translations.th.companies.kitthana.name,
     },
     bgColor: '#000000',
-    bottomImage: '/assets/companies/kitthana/company-bottom.png',
+    bottomImage: '/assets/companies/company-bottom.png',
     description: {
       en: translations.en.companies.kitthana.description,
       th: translations.th.companies.kitthana.description,
