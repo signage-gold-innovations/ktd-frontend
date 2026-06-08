@@ -1,0 +1,24 @@
+<svg width="409" height="478" viewBox="0 0 409 478" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M195.918 0.129883L85.1434 413.546" stroke="url(#paint0_linear_868_829)" stroke-opacity="0.3"/>
+<path d="M428 238.582L-4.88758e-06 238.582" stroke="url(#paint1_linear_868_829)" stroke-opacity="0.3"/>
+<path d="M428 71.335L-4.88758e-06 71.3349" stroke="url(#paint2_linear_868_829)" stroke-opacity="0.3"/>
+<path d="M415.77 63.6172L304.995 477.033" stroke="url(#paint3_linear_868_829)" stroke-opacity="0.3"/>
+<defs>
+<linearGradient id="paint0_linear_868_829" x1="196.401" y1="0.259292" x2="85.6264" y2="413.676" gradientUnits="userSpaceOnUse">
+<stop stop-color="#7600D8"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<linearGradient id="paint1_linear_868_829" x1="428" y1="239.082" x2="-2.18557e-08" y2="239.082" gradientUnits="userSpaceOnUse">
+<stop stop-color="#7600D8"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<linearGradient id="paint2_linear_868_829" x1="428" y1="71.835" x2="-2.18557e-08" y2="71.8349" gradientUnits="userSpaceOnUse">
+<stop stop-color="#7600D8"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+<linearGradient id="paint3_linear_868_829" x1="416.252" y1="63.7466" x2="305.478" y2="477.163" gradientUnits="userSpaceOnUse">
+<stop stop-color="#7600D8"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+</defs>
+</svg>

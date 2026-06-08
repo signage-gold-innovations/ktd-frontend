@@ -3,18 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/language-context';
-import { Globe02Icon, MenuIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { faFacebook, faXTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { faBars, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-
-const NAV_HREFS = [
-  { key: 'home' as const, href: '#' },
-  { key: 'about' as const, href: '#about' },
-  { key: 'services' as const, href: '#services' },
-  { key: 'contact' as const, href: '#contact' },
-];
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const SIDEBAR_COMPANIES = [
   { key: 'hiterratech' as const, href: '#hiterratech' },
@@ -22,13 +16,29 @@ const SIDEBAR_COMPANIES = [
   { key: 'kitthana' as const, href: '#kitthana' },
 ];
 
+const SOCIAL_ICONS = [
+  { icon: faFacebook, label: 'Facebook' },
+  { icon: faYoutube, label: 'Youtube' },
+  { icon: faXTwitter, label: 'X' },
+  { icon: faGlobe, label: 'Website' },
+] as const;
+
 export function Navbar() {
   const { language, toggle, t } = useLanguage();
 
   return (
-    <header className="absolute top-[40px] right-[42px] left-[42px] z-50 rounded-[8px] border border-white/20 bg-white/5 bg-clip-padding shadow-lg backdrop-blur-sm backdrop-saturate-150 md:top-[48px] md:right-[60px] md:left-[60px] md:rounded-[12px]">
+    <header
+      className="absolute top-[24px] right-4 left-4 z-50 rounded-[12px] md:top-[48px] md:right-[60px] md:left-[60px]"
+      style={{
+        background: 'rgba(255, 255, 255, 0.06)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+      }}
+    >
       <div className="flex h-[54px] w-full items-center gap-3 px-6 py-3 md:h-[68px] md:px-10">
-        {/* Mobile/all-screen hamburger menu */}
+        {/* Hamburger menu */}
         <Sheet>
           <SheetTrigger
             render={
@@ -39,9 +49,10 @@ export function Navbar() {
               />
             }
           >
-            <HugeiconsIcon icon={MenuIcon} className="size-5" />
+            <FontAwesomeIcon icon={faBars} size="lg" />
             <span className="sr-only">Toggle menu</span>
           </SheetTrigger>
+
           <SheetContent
             side="left"
             showCloseButton={false}
@@ -52,99 +63,59 @@ export function Navbar() {
             }}
           >
             {/* Companies list */}
-            <div className="mx-[28px] my-[36px] flex flex-col">
-              {SIDEBAR_COMPANIES.map((company, i) => (
+            <nav aria-label="Company navigation" className="mx-[16px] my-[28px] flex flex-col">
+              {SIDEBAR_COMPANIES.map((company) => (
                 <div key={company.key}>
                   <Link
                     href={company.href}
-                    className="flex items-center justify-between px-6 py-4 transition-colors hover:bg-white/5"
+                    className="font-anuphan flex items-center justify-between py-4 text-[18px] leading-[140%] font-bold text-white transition-colors hover:bg-white/5"
                   >
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-anuphan)',
-                        fontWeight: 'bold',
-                        fontSize: '18px',
-                        lineHeight: '140%',
-                        color: '#FFFFFF',
-                      }}
-                    >
-                      {t.companies[company.key].name}
-                    </span>
+                    <span>{t.companies[company.key].name}</span>
                     <Image
-                      src="/assets/icon/sidebar-square.png"
-                      alt="navigate"
-                      width={24}
-                      height={24}
-                      className="size-6 object-contain"
+                      src="/assets/navbar/arrow-right-square.svg"
+                      alt=""
+                      role="presentation"
+                      width={20}
+                      height={20}
                     />
                   </Link>
-                  <div className="border-t border-white/20" />
+                  <div className="border-t border-[#757575]" />
                 </div>
               ))}
-            </div>
+            </nav>
 
-            {/* Social icons bottom-left */}
-            <div className="mt-auto flex items-center gap-4 px-10 pb-10">
-              <Link
-                href="#"
-                aria-label="Facebook"
-                className="opacity-70 transition-opacity hover:opacity-100"
-              >
-                <Image
-                  src="/assets/icon/logo-fb.png"
-                  alt="Facebook"
-                  width={24}
-                  height={24}
-                  className="size-6 object-contain"
-                />
-              </Link>
-              <Link
-                href="#"
-                aria-label="Instagram"
-                className="opacity-70 transition-opacity hover:opacity-100"
-              >
-                <Image
-                  src="/assets/icon/logo-ig.png"
-                  alt="Instagram"
-                  width={24}
-                  height={24}
-                  className="size-6 object-contain"
-                />
-              </Link>
-              <Link
-                href="#"
-                aria-label="Website"
-                className="opacity-70 transition-opacity hover:opacity-100"
-              >
-                <Image
-                  src="/assets/icon/logo-web.png"
-                  alt="Website"
-                  width={24}
-                  height={24}
-                  className="size-6 object-contain"
-                />
-              </Link>
+            {/* Social icons */}
+            <div className="mt-auto flex items-center gap-5 px-10 pb-10">
+              {SOCIAL_ICONS.map(({ icon, label }) => (
+                <Link
+                  key={label}
+                  href="#"
+                  aria-label={label}
+                  className="text-white transition-colors hover:text-white"
+                >
+                  <FontAwesomeIcon icon={icon} style={{ width: 20, height: 20 }} />
+                </Link>
+              ))}
             </div>
           </SheetContent>
         </Sheet>
 
-        {/* Language switcher */}
+        {/* Company name — center */}
+        {/* <Link
+          href="#"
+          className="font-anuphan absolute left-1/2 -translate-x-1/2 text-[16px] font-semibold text-white md:text-[18px]"
+        >
+          {t.nav.companyName}
+        </Link> */}
+
+        {/* Language switcher — right */}
         <div className="ml-auto">
           <button
             onClick={toggle}
-            aria-label="Switch language"
-            className="flex items-center gap-1.5 rounded-md px-2 py-1 transition-colors hover:text-white"
-            style={{
-              fontFamily: 'var(--font-anuphan)',
-              fontWeight: 500,
-              fontStyle: 'normal',
-              fontSize: '24px',
-              lineHeight: '24px',
-              letterSpacing: '0%',
-              color: '#FFFFFF',
-            }}
+            aria-label={`Switch to ${language === 'en' ? 'Thai' : 'English'}`}
+            className="font-anuphan flex items-center gap-2 rounded-md px-2 py-1 text-[16px] leading-[18px] font-medium text-white transition-colors hover:text-white/80"
           >
-            <HugeiconsIcon icon={Globe02Icon} className="size-6" />
+            <FontAwesomeIcon icon={faGlobe} style={{ width: 20, height: 20 }} />
             <span>{language.toUpperCase()}</span>
           </button>
         </div>
