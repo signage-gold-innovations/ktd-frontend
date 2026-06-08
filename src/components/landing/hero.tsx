@@ -10,7 +10,7 @@ const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
 export function Hero() {
   const { t } = useLanguage();
-  const h = t.hero;
+  const h = t?.hero;
 
   return (
     <section
@@ -20,7 +20,7 @@ export function Hero() {
       {/* Background — uses Next.js Image for automatic WebP/AVIF, responsive sizing, and LCP optimization */}
       <div className="absolute inset-0">
         <Image
-          src="/assets/hero/hero-background.png"
+          src="/assets/landing/hero/hero-background.png"
           alt=""
           role="presentation"
           fill
@@ -38,9 +38,9 @@ export function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
-          className="font-anuphan mb-4 text-[18px] leading-[120%] font-bold text-white/80 md:text-[20px]"
+          className="font-anuphan mb-4 text-[16px] leading-[120%] font-semibold text-white md:text-[20px]"
         >
-          {h.presenterName}
+          {h?.presenterName}
         </motion.p>
 
         {/* Title */}
@@ -50,7 +50,7 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.4, ease: EASE }}
           className="font-anuphan text-[36px] leading-[100%] font-bold text-white md:text-[64px]"
         >
-          <span className="mb-8 block">{h.title}</span>
+          <span className="mb-8 block">{h?.title}</span>
         </motion.h1>
 
         {/* Subtitle */}
@@ -60,7 +60,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.6, ease: EASE }}
           className="font-anuphan mb-0 text-[20px] leading-[24px] font-light text-[#F3F3F3] md:text-[32px] md:leading-[32px]"
         >
-          {h.subtitle}
+          {h?.subtitle}
         </motion.p>
 
         {/* CTA Button */}
@@ -77,7 +77,7 @@ export function Hero() {
               background: 'linear-gradient(0deg, #A92DFF, #A92DFF)',
             }}
           >
-            {h.cta}
+            {h?.cta}
           </Button>
         </motion.div>
       </div>

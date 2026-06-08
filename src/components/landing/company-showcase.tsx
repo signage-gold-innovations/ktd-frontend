@@ -158,9 +158,9 @@ export function CompanyShowcase({
   }, []);
 
   const socialItems = (Object.keys(SOCIAL_ICON_MAP) as SocialKey[]).flatMap((key) => {
-    const href = socialLinks[key];
+    const href = socialLinks?.[key];
     if (!href) return [];
-    return [{ key, label: t.social[key], href, icon: SOCIAL_ICON_MAP[key] }];
+    return [{ key, label: t.social?.[key], href, icon: SOCIAL_ICON_MAP[key] }];
   });
 
   const cardItems =
@@ -206,7 +206,7 @@ export function CompanyShowcase({
         </motion.p>
 
         {/* Social links — fade in with stagger */}
-        {socialItems.length > 0 && (
+        {socialItems?.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
@@ -266,7 +266,7 @@ export function CompanyShowcase({
           }`}
           style={{ touchAction: 'pan-x' }}
         >
-          {cardItems.map(({ src, imgId }, i) => {
+          {cardItems?.map(({ src, imgId }, i) => {
             const isWide = i % 2 === 0;
             const w = isWide ? 434 : 311;
             return src ? (

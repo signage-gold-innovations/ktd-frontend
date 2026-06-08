@@ -19,7 +19,7 @@ const CARD_STYLE: React.CSSProperties = {
 
 export function About() {
   const { t } = useLanguage();
-  const a = t.about;
+  const a = t?.about;
 
   // Ref for the cards container — triggers animation when scrolled into view
   const cardsRef = useRef<HTMLDivElement>(null);
@@ -47,7 +47,7 @@ export function About() {
     >
       {/* Decorative background SVGs */}
       <Image
-        src="/assets/about/bg-flare.svg"
+        src="/assets/landing/about/bg-flare.svg"
         alt=""
         role="presentation"
         width={393}
@@ -57,7 +57,7 @@ export function About() {
         style={{ zIndex: 0 }}
       />
       <Image
-        src="/assets/about/bg-line.svg"
+        src="/assets/landing/about/bg-line.svg"
         alt=""
         role="presentation"
         width={423}
@@ -72,16 +72,16 @@ export function About() {
           {/* Left — text content */}
           <div className="font-anuphan flex flex-col gap-5 md:min-w-0 md:flex-1">
             <h2 className="text-[36px] leading-[110%] font-semibold text-white md:text-[48px]">
-              {a.title}
+              {a?.title}
             </h2>
             <p className="text-[16px] leading-[170%] font-medium text-[#F3F3F3] md:text-[20px]">
-              {a.p1}
+              {a?.p1}
             </p>
             <p className="text-[16px] leading-[170%] font-medium text-[#F3F3F3] md:text-[20px]">
-              {a.p2}
+              {a?.p2}
             </p>
             <p className="text-[16px] leading-[170%] font-medium text-[#F3F3F3] md:text-[20px]">
-              {a.p3}
+              {a?.p3}
             </p>
 
             {/* CEO */}
@@ -112,7 +112,7 @@ export function About() {
                 style={CARD_STYLE}
               >
                 <Image
-                  src="/assets/about/card-1-flare.svg"
+                  src="/assets/landing/about/card-1-flare.svg"
                   alt=""
                   role="presentation"
                   width={174}
@@ -121,7 +121,7 @@ export function About() {
                   style={{ zIndex: 1 }}
                 />
                 <Image
-                  src="/assets/about/card-1.svg"
+                  src="/assets/landing/about/card-1.svg"
                   alt=""
                   role="presentation"
                   width={120}
@@ -129,9 +129,9 @@ export function About() {
                   className="absolute top-0 right-0 object-contain"
                   style={{ zIndex: 0 }}
                 />
-                <div className="relative z-10 flex flex-col gap-1">
-                  <h3 className="text-[24px] font-semibold text-white">{a.card1Title}</h3>
-                  <p className="text-[14px] leading-[120%] text-[#C0C0C0]">{a.card1Desc}</p>
+                <div className="relative z-10 flex flex-col gap-1 md:min-h-[90px] md:justify-start">
+                  <h3 className="text-[24px] font-semibold text-white">{a?.card1Title}</h3>
+                  <p className="text-[14px] leading-[120%] text-[#C0C0C0]">{a?.card1Desc}</p>
                 </div>
               </motion.div>
 
@@ -145,7 +145,7 @@ export function About() {
                 style={CARD_STYLE}
               >
                 <Image
-                  src="/assets/about/card-2.svg"
+                  src="/assets/landing/about/card-2.svg"
                   alt=""
                   role="presentation"
                   width={134}
@@ -153,9 +153,9 @@ export function About() {
                   className="absolute top-0 right-0 object-contain"
                   style={{ zIndex: 0 }}
                 />
-                <div className="relative z-10 flex flex-col gap-1">
-                  <h3 className="text-[24px] font-semibold text-white">{a.card2Title}</h3>
-                  <p className="text-[14px] leading-[120%] text-[#C0C0C0]">{a.card2Desc}</p>
+                <div className="relative z-10 flex flex-col gap-1 md:min-h-[90px] md:justify-start">
+                  <h3 className="text-[24px] font-semibold text-white">{a?.card2Title}</h3>
+                  <p className="text-[14px] leading-[120%] text-[#C0C0C0]">{a?.card2Desc}</p>
                 </div>
               </motion.div>
             </div>
@@ -172,12 +172,12 @@ export function About() {
               {/* Text — takes left portion, image lives on the right */}
               <div className="relative z-10 flex flex-col gap-1">
                 <h3 className="text-[24px] leading-[120%] font-semibold text-white md:text-[24px]">
-                  {a.card3Title}
+                  {a?.card3Title}
                 </h3>
-                <p className="text-[14px] leading-[120%] text-[#C0C0C0]">{a.card3Desc}</p>
+                <p className="text-[14px] leading-[120%] text-[#C0C0C0]">{a?.card3Desc}</p>
               </div>
               <Image
-                src="/assets/about/card-3.svg"
+                src="/assets/landing/about/card-3.svg"
                 alt=""
                 role="presentation"
                 width={121}

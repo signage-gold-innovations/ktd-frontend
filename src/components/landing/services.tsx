@@ -17,24 +17,24 @@ const CARD_STYLE: React.CSSProperties = {
 };
 
 const SERVICE_IMAGES = [
-  '/assets/services/service1.jpg',
-  '/assets/services/service2.jpg',
-  '/assets/services/service3.png',
+  '/assets/landing/services/service1.jpg',
+  '/assets/landing/services/service2.jpg',
+  '/assets/landing/services/service3.png',
 ] as const;
 
 const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
 export function Services() {
   const { t } = useLanguage();
-  const s = t.services;
+  const s = t?.services;
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
 
   const services = [
-    { image: SERVICE_IMAGES[0], label: s.card1Label, description: s.card1Desc },
-    { image: SERVICE_IMAGES[1], label: s.card2Label, description: s.card2Desc },
-    { image: SERVICE_IMAGES[2], label: s.card3Label, description: s.card3Desc },
+    { image: SERVICE_IMAGES[0], label: s?.card1Label, description: s?.card1Desc },
+    { image: SERVICE_IMAGES[1], label: s?.card2Label, description: s?.card2Desc },
+    { image: SERVICE_IMAGES[2], label: s?.card3Label, description: s?.card3Desc },
   ];
 
   const cardVariants = {
@@ -56,7 +56,7 @@ export function Services() {
 
       {/* bg-bottom-left.svg — replaces service-bottom-left.png */}
       <Image
-        src="/assets/services/bg-bottom-left.svg"
+        src="/assets/landing/services/bg-bottom-left.svg"
         alt=""
         role="presentation"
         width={351}
@@ -68,7 +68,7 @@ export function Services() {
 
       {/* bg-bottom.svg — bottom center glow */}
       <Image
-        src="/assets/services/bg-bottom.svg"
+        src="/assets/landing/services/bg-bottom.svg"
         alt=""
         role="presentation"
         width={1440}
@@ -80,7 +80,7 @@ export function Services() {
 
       {/* bg-top-right.svg — replaces service-top-right.png */}
       <Image
-        src="/assets/services/bg-top-right.svg"
+        src="/assets/landing/services/bg-top-right.svg"
         alt=""
         role="presentation"
         width={409}
@@ -97,14 +97,14 @@ export function Services() {
           transition={{ duration: 0.6, ease: EASE }}
           className="font-anuphan text-[36px] leading-[100%] font-semibold text-white capitalize"
         >
-          {s.title}
+          {s?.title}
         </motion.h2>
 
         {/* Service cards */}
         <div className="mt-10 flex flex-col gap-[10px] md:grid md:grid-cols-3">
-          {services.map((service, i) => (
+          {services?.map((service, i) => (
             <motion.div
-              key={service.label}
+              key={service?.label ?? i}
               custom={i}
               variants={cardVariants}
               initial="hidden"
@@ -114,17 +114,23 @@ export function Services() {
             >
               {/* Image */}
               <div className="relative mb-4 h-[345px] w-full overflow-hidden rounded-[8px]">
-                <Image src={service.image} alt={service.label} fill className="object-cover" />
+                <Image
+                  src={service?.image}
+                  alt={service?.label ?? ''}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover"
+                />
               </div>
 
               {/* Label badge */}
               <span className="font-anuphan inline-flex w-fit items-center rounded-[5px] border border-[#C067FF] px-[8px] py-[4px] text-[14px] leading-[16px] font-semibold tracking-[0.12px] text-[#C067FF] uppercase">
-                {service.label}
+                {service?.label}
               </span>
 
               {/* Description */}
               <p className="font-anuphan text-[16px] leading-[100%] text-[#C7C7C7]">
-                {service.description}
+                {service?.description}
               </p>
             </motion.div>
           ))}

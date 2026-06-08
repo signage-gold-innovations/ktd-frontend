@@ -26,7 +26,7 @@ export function Footer() {
     >
       <div className="container mx-auto flex flex-col items-center gap-4 px-4 md:px-8">
         <p className="font-anuphan text-[16px] font-normal text-white">
-          &copy;{CURRENT_YEAR}. {t.footer.rights}
+          &copy;{CURRENT_YEAR}. {t?.footer?.rights}
         </p>
         <div className="flex items-center gap-5">
           {SOCIAL_ICONS.map(({ icon, label, href }) => (

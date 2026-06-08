@@ -39,14 +39,12 @@ export const translations = {
     },
     services: {
       title: 'Our Services & Ventures',
-      card1Label: 'HITERRATECH (SATELLITE DATA)',
-      card1Desc: 'Satellite imagery data services and Geospatial area analysis',
-      card2Label: 'SILACHAI (ROCK QUARRY)',
-      card2Desc:
-        'Production and distribution of all types of construction stone, standardised processes',
-      card3Label: 'KITTHANA (BRICK FACTORY)',
-      card3Desc:
-        'High-quality brick block production, supporting all levels of construction projects',
+      card1Label: 'HITERRATECH',
+      card1Desc: 'The Intelligent View (Engineering the Solve via Data)',
+      card2Label: 'ศิลาชัยเจริญ',
+      card2Desc: 'The Intelligent View (Engineering the Solve via Data)',
+      card3Label: 'กิจธนาทรัพย์',
+      card3Desc: 'The Intelligent View (Engineering the Solve via Data)',
     },
     footer: {
       rights: 'All rights reserved.',
@@ -104,15 +102,15 @@ export const translations = {
     },
     services: {
       title: 'บริการและธุรกิจในเครือ',
-      card1Label: 'HITERRATECH (SATELLITE DATA)',
-      card1Desc: 'บริการข้อมูลภาพถ่ายดาวเทียม วิเคราะห์พื้นที่ Geospatial',
-      card2Label: 'ศิลาชัยเจริญ (ROCK QUARRY)',
-      card2Desc: 'ผลิตและจำหน่ายหินก่อสร้างทุกชนิด กระบวนการที่ได้มาตรฐาน',
-      card3Label: 'กิจธนาทรัพย์ (BRICK FACTORY)',
-      card3Desc: 'ผลิตอิฐบล็อกคุณภาพสูง รองรับงานโครงการก่อสร้างทุกระดับ',
+      card1Label: 'HITERRATECH',
+      card1Desc: 'The Intelligent View (Engineering the Solve via Data)',
+      card2Label: 'ศิลาชัยเจริญ',
+      card2Desc: 'The Intelligent View (Engineering the Solve via Data)',
+      card3Label: 'กิจธนาทรัพย์',
+      card3Desc: 'The Intelligent View (Engineering the Solve via Data)',
     },
     footer: {
-      rights: 'สงวนลิขสิทธิ์ทุกประการ',
+      rights: 'All rights reserved.',
     },
     social: {
       website: 'Website',

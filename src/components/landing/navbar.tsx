@@ -80,7 +80,7 @@ export function Navbar() {
                   >
                     <span>{t.companies[company.key].name}</span>
                     <Image
-                      src="/assets/navbar/arrow-right-square.svg"
+                      src="/assets/landing/navbar/arrow-right-square.svg"
                       alt=""
                       role="presentation"
                       width={20}
