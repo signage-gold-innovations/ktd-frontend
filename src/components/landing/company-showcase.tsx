@@ -7,6 +7,7 @@ import { useLanguage } from '@/contexts/language-context';
 import { faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { faArrowLeft, faArrowRight, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { motion, useInView } from 'motion/react';
 
 interface LocalizedString {
   en: string;
@@ -49,6 +50,11 @@ export function CompanyShowcase({
 
   const nameText = language === 'th' ? name.th : name.en;
   const descriptionText = language === 'th' ? description.th : description.en;
+
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(contentRef, { once: true, amount: 0.3 });
+
+  const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
   const scrollRef = useRef<HTMLDivElement>(null);
   // Pointer drag state stored in refs (no re-render needed)
@@ -178,20 +184,35 @@ export function CompanyShowcase({
       style={{ background: bgColor ?? '#1D1D1D' }}
     >
       {/* Content with padding */}
-      <div className="w-full px-4 md:px-18">
-        {/* Company name */}
-        <h2 className="font-anuphan w-full text-[32px] leading-[120%] font-semibold text-white capitalize md:text-[36px]">
+      <div ref={contentRef} className="w-full px-4 md:px-18">
+        {/* Company name — slides in from left */}
+        <motion.h2
+          initial={{ opacity: 0, x: -32 }}
+          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -32 }}
+          transition={{ duration: 0.6, ease: EASE }}
+          className="font-anuphan w-full text-[32px] leading-[120%] font-semibold text-white capitalize md:text-[36px]"
+        >
           {nameText}
-        </h2>
+        </motion.h2>
 
-        {/* Description */}
-        <p className="font-anuphan mt-6 text-[16px] leading-[140%] font-medium text-[#C7C7C7] md:text-[18px] xl:text-[20px]">
+        {/* Description — slides in from left with slight delay */}
+        <motion.p
+          initial={{ opacity: 0, x: -24 }}
+          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -24 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
+          className="font-anuphan mt-6 text-[16px] leading-[140%] font-medium text-[#C7C7C7] md:text-[18px] xl:text-[20px]"
+        >
           {descriptionText}
-        </p>
+        </motion.p>
 
-        {/* Social links */}
+        {/* Social links — fade in with stagger */}
         {socialItems.length > 0 && (
-          <div className="mt-5 flex flex-wrap items-center gap-3">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+            transition={{ duration: 0.5, delay: 0.25, ease: EASE }}
+            className="mt-5 flex flex-wrap items-center gap-3"
+          >
             {socialItems.map(({ key, label, href, icon }) => (
               <Link
                 key={key}
@@ -224,7 +245,7 @@ export function CompanyShowcase({
                 </span>
               </Link>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
 
