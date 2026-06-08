@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/language-context';
 import { faFacebook, faXTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { faBars, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { motion } from 'motion/react';
 
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -27,7 +28,14 @@ export function Navbar() {
   const { language, toggle, t } = useLanguage();
 
   return (
-    <header
+    <motion.header
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.5,
+        delay: 0.3,
+        ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
+      }}
       className="absolute top-[24px] right-4 left-4 z-50 rounded-[12px] md:top-[48px] md:right-[60px] md:left-[60px]"
       style={{
         background: 'rgba(255, 255, 255, 0.06)',
@@ -72,7 +80,7 @@ export function Navbar() {
                   >
                     <span>{t.companies[company.key].name}</span>
                     <Image
-                      src="/assets/navbar/arrow-right-square.svg"
+                      src="/assets/landing/navbar/arrow-right-square.svg"
                       alt=""
                       role="presentation"
                       width={20}
@@ -120,6 +128,6 @@ export function Navbar() {
           </button>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
