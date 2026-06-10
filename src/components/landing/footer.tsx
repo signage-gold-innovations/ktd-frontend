@@ -34,7 +34,7 @@ export function Footer() {
               key={label}
               href={href}
               aria-label={label}
-              className="text-white transition-colors hover:text-white"
+              className="text-white transition-opacity hover:opacity-70"
             >
               <FontAwesomeIcon icon={icon} style={{ width: 20, height: 20 }} />
             </Link>

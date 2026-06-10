@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Anuphan } from 'next/font/google';
+import { Anuphan, Manrope } from 'next/font/google';
 
 import './globals.css';
 
@@ -10,14 +10,20 @@ import { LanguageHtmlWrapper } from '@/components/landing/language-html-wrapper'
 import { cn } from '@/lib/utils';
 
 /**
- * Anuphan is the primary typeface for the landing page — covers both
- * Latin and Thai subsets. Geist, Figtree, and Manrope from the original
- * scaffold have been removed as they are unused in the landing page.
+ * Anuphan — primary typeface for KTD landing page (Latin + Thai).
+ * Manrope — typeface for sub-company pages (e.g. Hiterratech).
  */
 const anuphan = Anuphan({
   subsets: ['latin', 'thai'],
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-anuphan',
+  display: 'swap',
+});
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
   display: 'swap',
 });
 
@@ -52,7 +58,7 @@ export default function RootLayout({
      * It must live inside <LanguageProvider> to consume the context.
      */
     <LanguageProvider>
-      <LanguageHtmlWrapper className={cn('h-full antialiased', anuphan.variable)}>
+      <LanguageHtmlWrapper className={cn('h-full antialiased', anuphan.variable, manrope.variable)}>
         <body className="flex min-h-full flex-col">{children}</body>
       </LanguageHtmlWrapper>
     </LanguageProvider>

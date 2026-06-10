@@ -8,13 +8,12 @@ import { faBars, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
 
-import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const SIDEBAR_COMPANIES = [
-  { key: 'hiterratech' as const, href: '#hiterratech' },
-  { key: 'silachai' as const, href: '#silachai' },
-  { key: 'kitthana' as const, href: '#kitthana' },
+  { key: 'hiterratech' as const, href: '/hiterratech' },
+  { key: 'silachai' as const, href: '/silachai' },
+  { key: 'kitthana' as const, href: '/kitthana' },
 ];
 
 const SOCIAL_ICONS = [
@@ -50,10 +49,9 @@ export function Navbar() {
         <Sheet>
           <SheetTrigger
             render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-none text-white hover:bg-transparent! focus-visible:border-transparent focus-visible:ring-0"
+              <button
+                className="flex items-center justify-center text-white transition-opacity hover:opacity-70 focus-visible:outline-none"
+                aria-label="Toggle menu"
               />
             }
           >
@@ -99,7 +97,7 @@ export function Navbar() {
                   key={label}
                   href="#"
                   aria-label={label}
-                  className="text-white transition-colors hover:text-white"
+                  className="text-white transition-opacity hover:opacity-70"
                 >
                   <FontAwesomeIcon icon={icon} style={{ width: 20, height: 20 }} />
                 </Link>

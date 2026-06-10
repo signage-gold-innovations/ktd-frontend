@@ -220,7 +220,7 @@ export function CompanyShowcase({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="inline-flex h-[52px] w-auto items-center overflow-hidden rounded-[8px] transition-opacity hover:opacity-80"
+                className="inline-flex h-[52px] w-auto items-center overflow-hidden rounded-[8px] transition-opacity hover:opacity-70"
                 style={{
                   background: 'rgba(255,255,255,0.06)',
                   border: '1px solid rgba(255,255,255,0.18)',
