@@ -3,8 +3,11 @@ import { Anuphan, Manrope } from 'next/font/google';
 
 import './globals.css';
 
+import { SITE_URL } from '@/config/site';
 import { LanguageProvider } from '@/contexts/language-context';
+import { getLandingContent } from '@/services/landing';
 
+import { AnalyticsTracker } from '@/components/analytics/analytics-tracker';
 import { LanguageHtmlWrapper } from '@/components/landing/language-html-wrapper';
 
 import { cn } from '@/lib/utils';
@@ -28,6 +31,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'KTD Group — Full-Spectrum Technopreneur',
   description:
     'KTD Group bridges deep technical engineering and entrepreneurial growth across satellite data, rock quarry, and brick manufacturing ventures.',
@@ -46,20 +50,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // CMS-merged translations (cached, static fallback) shared with all client components
+  const content = await getLandingContent();
+
   return (
     /**
      * LanguageHtmlWrapper is a thin client component that reads the selected
      * language from context and keeps the <html lang="..."> attribute in sync.
      * It must live inside <LanguageProvider> to consume the context.
      */
-    <LanguageProvider>
+    <LanguageProvider translations={content.translations} languages={content.languages}>
       <LanguageHtmlWrapper className={cn('h-full antialiased', anuphan.variable, manrope.variable)}>
-        <body className="flex min-h-full flex-col">{children}</body>
+        <body className="flex min-h-full flex-col">
+          <AnalyticsTracker />
+          {children}
+        </body>
       </LanguageHtmlWrapper>
     </LanguageProvider>
   );

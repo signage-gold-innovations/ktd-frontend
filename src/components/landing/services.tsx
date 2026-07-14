@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import Image from 'next/image';
+import { DEFAULT_SERVICE_IMAGES } from '@/config/landing-cms';
 import { useLanguage } from '@/contexts/language-context';
 import { motion, useInView } from 'motion/react';
 
@@ -16,15 +17,14 @@ const CARD_STYLE: React.CSSProperties = {
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
 };
 
-const SERVICE_IMAGES = [
-  '/assets/landing/services/service1.jpg',
-  '/assets/landing/services/service2.jpg',
-  '/assets/landing/services/service3.png',
-] as const;
-
 const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
-export function Services() {
+interface ServicesProps {
+  /** CMS-editable card images (card1–card3); defaults to the static assets */
+  readonly images?: [string, string, string];
+}
+
+export function Services({ images = DEFAULT_SERVICE_IMAGES }: ServicesProps) {
   const { t } = useLanguage();
   const s = t?.services;
 
@@ -32,9 +32,9 @@ export function Services() {
   const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
 
   const services = [
-    { image: SERVICE_IMAGES[0], label: s?.card1Label, description: s?.card1Desc },
-    { image: SERVICE_IMAGES[1], label: s?.card2Label, description: s?.card2Desc },
-    { image: SERVICE_IMAGES[2], label: s?.card3Label, description: s?.card3Desc },
+    { image: images[0], label: s?.card1Label, description: s?.card1Desc },
+    { image: images[1], label: s?.card2Label, description: s?.card2Desc },
+    { image: images[2], label: s?.card3Label, description: s?.card3Desc },
   ];
 
   const cardVariants = {

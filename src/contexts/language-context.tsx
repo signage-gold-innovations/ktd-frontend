@@ -1,34 +1,60 @@
 'use client';
 
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { translations, type Language } from '@/i18n/translations';
+import {
+  DEFAULT_LANGUAGE,
+  FALLBACK_LANGUAGES,
+  getStaticDictionary,
+  translations as staticTranslations,
+  type Language,
+  type LanguageInfo,
+  type Translations,
+} from '@/i18n/translations';
+
+import { track } from '@/lib/analytics';
 
 const STORAGE_KEY = 'ktd-language';
 
-function getInitialLanguage(): Language {
-  if (typeof globalThis.window === 'undefined') return 'en';
+function getInitialLanguage(available: Language[]): Language {
+  if (typeof globalThis.window === 'undefined') return DEFAULT_LANGUAGE;
   const stored = globalThis.localStorage.getItem(STORAGE_KEY);
-  if (stored === 'en' || stored === 'th') return stored;
+  if (stored && available.includes(stored)) return stored;
   // Fall back to browser language preference
-  return globalThis.navigator.language.startsWith('th') ? 'th' : 'en';
+  const browser = globalThis.navigator.language.toLowerCase();
+  return available.find((code) => browser.startsWith(code)) ?? DEFAULT_LANGUAGE;
 }
 
 type LanguageContextValue = {
   language: Language;
+  /** Enabled site languages in display order */
+  languages: LanguageInfo[];
   setLanguage: (lang: Language) => void;
+  /** Cycle to the next enabled language */
   toggle: () => void;
-  t: (typeof translations)['en'];
+  t: Translations;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-export function LanguageProvider({ children }: { readonly children: React.ReactNode }) {
-  const [language, setLang] = useState<Language>('en');
+export function LanguageProvider({
+  children,
+  translations = staticTranslations,
+  languages = FALLBACK_LANGUAGES,
+}: {
+  readonly children: React.ReactNode;
+  /** CMS-merged dictionaries from getLandingContent(); defaults to the static bundle */
+  readonly translations?: Record<Language, Translations>;
+  /** Enabled languages from getLandingContent(); defaults to the static list */
+  readonly languages?: LanguageInfo[];
+}) {
+  const [language, setLang] = useState<Language>(DEFAULT_LANGUAGE);
+
+  const codes = useMemo(() => languages.map((lang) => lang.code), [languages]);
 
   // Hydrate from localStorage after mount to avoid SSR mismatch
   useEffect(() => {
-    setLang(getInitialLanguage());
-  }, []);
+    setLang(getInitialLanguage(codes));
+  }, [codes]);
 
   function setLanguage(lang: Language) {
     setLang(lang);
@@ -37,31 +63,35 @@ export function LanguageProvider({ children }: { readonly children: React.ReactN
     } catch {
       // localStorage may be unavailable in private browsing on some browsers
     }
+    track({ type: 'language_switch', target: lang });
   }
 
   function toggle() {
-    setLanguage(language === 'en' ? 'th' : 'en');
+    const index = codes.indexOf(language);
+    setLanguage(codes[(index + 1) % codes.length] ?? DEFAULT_LANGUAGE);
   }
 
   const value = useMemo(
     () => ({
       language,
+      languages,
       setLanguage,
       toggle,
-      t: translations[language] as (typeof translations)['en'],
+      t: translations[language] ?? getStaticDictionary(language),
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [language]
+    [language, languages, translations]
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
 
 /**
- * useLanguage — access current language, setter, toggle, and translations.
+ * useLanguage — access current language, the enabled language list, setter,
+ * toggle, and translations.
  *
  * Usage:
- *   const { t, language, toggle } = useLanguage();
+ *   const { t, language, languages, toggle } = useLanguage();
  *   <p>{t.hero.title}</p>
  */
 export function useLanguage() {

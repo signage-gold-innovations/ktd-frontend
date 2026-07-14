@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { DEFAULT_HERO_BACKGROUND } from '@/config/landing-cms';
 import { useLanguage } from '@/contexts/language-context';
 import { motion } from 'motion/react';
 
@@ -8,7 +9,12 @@ import { Button } from '@/components/ui/button';
 
 const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
-export function Hero() {
+interface HeroProps {
+  /** CMS-editable background image; defaults to the static asset */
+  readonly backgroundImage?: string;
+}
+
+export function Hero({ backgroundImage = DEFAULT_HERO_BACKGROUND }: HeroProps) {
   const { t } = useLanguage();
   const h = t?.hero;
 
@@ -20,7 +26,7 @@ export function Hero() {
       {/* Background — uses Next.js Image for automatic WebP/AVIF, responsive sizing, and LCP optimization */}
       <div className="absolute inset-0">
         <Image
-          src="/assets/landing/hero/hero-background.png"
+          src={backgroundImage}
           alt=""
           role="presentation"
           fill
@@ -70,6 +76,8 @@ export function Hero() {
           transition={{ duration: 0.5, delay: 0.85, ease: EASE }}
         >
           <Button
+            data-track="cta_click"
+            data-track-target="hero-cta"
             className="font-anuphan mt-16 rounded-[8px] text-[18px] font-bold md:h-[60px]! md:w-[260px]! md:text-[22px]!"
             style={{
               width: '217px',

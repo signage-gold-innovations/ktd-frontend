@@ -4,15 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/language-context';
+import type { Language } from '@/i18n/translations';
 import { faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { faArrowLeft, faArrowRight, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion, useInView } from 'motion/react';
 
-interface LocalizedString {
-  en: string;
-  th: string;
-}
+/** Text keyed by language code — English is the fallback */
+type LocalizedString = Record<Language, string>;
 
 interface CompanyShowcaseProps {
   /** Used as the section's id attribute for in-page anchor navigation */
@@ -48,8 +47,8 @@ export function CompanyShowcase({
 }: Readonly<CompanyShowcaseProps>) {
   const { t, language } = useLanguage();
 
-  const nameText = language === 'th' ? name.th : name.en;
-  const descriptionText = language === 'th' ? description.th : description.en;
+  const nameText = name[language] || name.en;
+  const descriptionText = description[language] || description.en;
 
   const contentRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(contentRef, { once: true, amount: 0.3 });
@@ -220,6 +219,8 @@ export function CompanyShowcase({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
+                data-track="social_click"
+                data-track-target={`${id}:${key}`}
                 className="inline-flex h-[52px] w-auto items-center overflow-hidden rounded-[8px] transition-opacity hover:opacity-70"
                 style={{
                   background: 'rgba(255,255,255,0.06)',
