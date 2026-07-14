@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import type { LanguageInfo } from '@/i18n/translations';
 
 import { CompanyForm } from '@/components/admin/content/company-form';
 import type { EditableSection } from '@/components/admin/content/section-form';
@@ -32,9 +33,11 @@ const SECTION_META: Record<LandingSectionKey, { title: string; description: stri
 interface ContentEditorProps {
   sections: EditableSection[];
   companies: LandingCompanyRow[];
+  /** All configured site languages (from /admin/languages), incl. disabled ones */
+  languages: LanguageInfo[];
 }
 
-export function ContentEditor({ sections, companies }: ContentEditorProps) {
+export function ContentEditor({ sections, companies, languages }: ContentEditorProps) {
   const [activeTab, setActiveTab] = useState<TabId>('hero');
 
   const sectionByKey = new Map(sections.map((section) => [section.key, section]));
@@ -42,7 +45,7 @@ export function ContentEditor({ sections, companies }: ContentEditorProps) {
   const renderSection = (key: LandingSectionKey) => {
     const section = sectionByKey.get(key);
     if (!section) return null;
-    return <SectionForm section={section} {...SECTION_META[key]} />;
+    return <SectionForm section={section} languages={languages} {...SECTION_META[key]} />;
   };
 
   return (
@@ -74,7 +77,7 @@ export function ContentEditor({ sections, companies }: ContentEditorProps) {
       {activeTab === 'companies' && (
         <div className="flex flex-col gap-6">
           {companies.map((company) => (
-            <CompanyForm key={company.slug} company={company} />
+            <CompanyForm key={company.slug} company={company} languages={languages} />
           ))}
         </div>
       )}

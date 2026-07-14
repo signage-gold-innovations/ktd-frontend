@@ -2,7 +2,6 @@
 
 import { updateTag } from 'next/cache';
 import { LANDING_CACHE_TAG } from '@/config/landing-cms';
-import { LANGUAGE_CODES } from '@/i18n/translations';
 import { checkAdminAccess } from '@/services/admin';
 import { z } from 'zod';
 
@@ -33,18 +32,19 @@ const imageUrl = z
     'Images must be a local /assets path or a Supabase Storage URL from the media library.'
   );
 
-const languageCode = z.enum(LANGUAGE_CODES);
+/** Language codes are dynamic (managed at /admin/languages) — validate the shape only */
+const languageCode = z.string().regex(/^[a-z]{2,3}(-[a-z0-9]{2,8})?$/);
 
 const sectionSchema = z.object({
   key: z.enum(LANDING_SECTION_KEYS),
-  content: z.partialRecord(languageCode, z.record(z.string(), z.string())),
+  content: z.record(languageCode, z.record(z.string(), z.string())),
   images: z.record(z.string(), imageUrl).optional(),
 });
 
 const companySchema = z.object({
   slug: z.enum(COMPANY_SLUGS),
-  name: z.partialRecord(languageCode, z.string()),
-  description: z.partialRecord(languageCode, z.string()),
+  name: z.record(languageCode, z.string()),
+  description: z.record(languageCode, z.string()),
   bg_color: z.string(),
   bottom_image: imageUrl.nullable().optional(),
   social_links: z.object({

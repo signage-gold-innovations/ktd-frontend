@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { LANGUAGES, translations, type Language } from '@/i18n/translations';
+import { translations, type LanguageInfo } from '@/i18n/translations';
 
 import { ImageField } from '@/components/admin/content/image-field';
+import { LanguageTabs } from '@/components/admin/content/language-tabs';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -24,7 +25,7 @@ import type { LandingSectionKey } from '@/types/landing';
 export interface EditableSection {
   key: LandingSectionKey;
   /** Per-language field values, keyed by language code then field key */
-  content: Record<Language, Record<string, string>>;
+  content: Record<string, Record<string, string>>;
   images: Record<string, string>;
 }
 
@@ -58,11 +59,14 @@ interface SectionFormProps {
   section: EditableSection;
   title: string;
   description: string;
+  /** All configured site languages (from /admin/languages), incl. disabled ones */
+  languages: LanguageInfo[];
 }
 
-export function SectionForm({ section, title, description }: SectionFormProps) {
+export function SectionForm({ section, title, description, languages }: SectionFormProps) {
   const [content, setContent] = useState(section.content);
   const [images, setImages] = useState(section.images);
+  const [activeLang, setActiveLang] = useState(languages[0]?.code ?? 'en');
   const [status, setStatus] = useState<SaveStatus>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -71,8 +75,11 @@ export function SectionForm({ section, title, description }: SectionFormProps) {
   const fieldKeys = Object.keys(translations.en[section.key]);
   const imageFields = SECTION_IMAGE_FIELDS[section.key] ?? [];
 
-  const setField = (lang: Language, key: string, value: string) => {
-    setContent((prev) => ({ ...prev, [lang]: { ...prev[lang], [key]: value } }));
+  const setField = (key: string, value: string) => {
+    setContent((prev) => ({
+      ...prev,
+      [activeLang]: { ...prev[activeLang], [key]: value },
+    }));
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -86,7 +93,7 @@ export function SectionForm({ section, title, description }: SectionFormProps) {
       });
       setStatus(
         result.ok
-          ? { type: 'success', message: 'Saved. The landing page is updated.' }
+          ? { type: 'success', message: 'Saved. All languages of this section are updated.' }
           : { type: 'error', message: result.error }
       );
     });
@@ -114,39 +121,41 @@ export function SectionForm({ section, title, description }: SectionFormProps) {
             </div>
           )}
 
-          {fieldKeys.map((key) => {
-            const FieldComponent = isLongText(key) ? Textarea : Input;
-            return (
-              <div key={key} className="flex flex-col gap-2">
-                <p className="text-sm font-medium">{formatFieldLabel(key)}</p>
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {LANGUAGES.map((lang) => (
-                    <div key={lang.code} className="flex flex-col gap-1.5">
-                      <Label
-                        htmlFor={`${section.key}-${key}-${lang.code}`}
-                        className="text-muted-foreground text-xs"
-                      >
-                        {lang.name}
-                      </Label>
-                      <FieldComponent
-                        id={`${section.key}-${key}-${lang.code}`}
-                        value={content[lang.code]?.[key] ?? ''}
-                        onChange={(
-                          event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-                        ) => setField(lang.code, key, event.target.value)}
-                      />
-                    </div>
-                  ))}
+          <div className="flex flex-col gap-5">
+            <LanguageTabs
+              languages={languages}
+              active={activeLang}
+              onChange={setActiveLang}
+              idPrefix={`section-${section.key}`}
+            />
+
+            {fieldKeys.map((key) => {
+              const FieldComponent = isLongText(key) ? Textarea : Input;
+              return (
+                <div key={key} className="flex flex-col gap-1.5">
+                  <Label htmlFor={`${section.key}-${key}-${activeLang}`}>
+                    {formatFieldLabel(key)}
+                  </Label>
+                  <FieldComponent
+                    id={`${section.key}-${key}-${activeLang}`}
+                    value={content[activeLang]?.[key] ?? ''}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                      setField(key, event.target.value)
+                    }
+                  />
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </CardContent>
 
         <CardFooter className="flex items-center gap-3 border-t">
           <Button type="submit" disabled={isPending}>
             {isPending ? 'Saving…' : 'Save changes'}
           </Button>
+          <p className="text-muted-foreground text-xs">
+            Saving stores every language, not just the open tab.
+          </p>
           {status && (
             <p
               className={

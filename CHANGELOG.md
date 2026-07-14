@@ -4,6 +4,28 @@ All notable changes to this project are documented here. Follow semantic version
 
 ---
 
+## [2026-07-15] Language Settings Page & Content Editor Language Tabs
+
+### Added 🆕
+
+- `migrations/004_site_languages.sql` — `public.site_languages` table (code, switcher label, English/native names, enabled flag, sort order) with public-read / admin-write RLS and a trigger that protects `en` (the fallback language) from being disabled, renamed, or deleted; seeded with English, Thai, Chinese
+- **`/admin/languages`** — language settings page: add a language (code + names), enable/disable (hidden languages keep their content), reorder with ↑/↓, remove (content stays in the JSONB and returns if the code is re-added). New languages show up instantly as a content-editor tab and, once enabled, in the public switcher — falling back to English until translated. No code change or deploy needed.
+- `src/services/languages.ts` — shared `fetchSiteLanguages()` with static fallback when Supabase is unreachable
+
+### Changed 🔄
+
+- **Content editor now uses language sub-tabs**: each section/company form has one tab per configured language (disabled ones marked "hidden") instead of side-by-side columns; shared fields (images, colors, social links) sit outside the tabs; saving stores every language at once
+- Language list is DB-driven end to end: `getLandingContent()` returns enabled languages, `LanguageProvider`/switchers consume them, and the `Language` type is now an open string validated at runtime; static en/th/zh dictionaries remain as offline fallbacks
+- Content save actions accept any configured language code (shape-validated)
+- Admin sidebar gains a Languages item
+
+### Migration Steps
+
+1. Apply `migrations/004_site_languages.sql` _(already applied to the KTD Supabase project on 2026-07-15)_
+2. Manage languages at `/admin/languages`; translate at `/admin/content`
+
+---
+
 ## [2026-07-15] Admin Analytics Dashboard, Multi-language CMS & Cleanup
 
 ### Added 🆕

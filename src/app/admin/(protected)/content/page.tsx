@@ -1,6 +1,7 @@
 import { COMPANIES } from '@/config/companies';
 import { DEFAULT_HERO_BACKGROUND, DEFAULT_SERVICE_IMAGES } from '@/config/landing-cms';
-import { LANGUAGE_CODES, translations, type Language } from '@/i18n/translations';
+import { getStaticDictionary, type Language, type LanguageInfo } from '@/i18n/translations';
+import { fetchSiteLanguages } from '@/services/languages';
 
 import { ContentEditor } from '@/components/admin/content/content-editor';
 import type { EditableSection } from '@/components/admin/content/section-form';
@@ -21,20 +22,21 @@ const DEFAULT_SECTION_IMAGES: Partial<Record<LandingSectionKey, Record<string, s
   },
 };
 
-function buildSections(rows: LandingSectionRow[]): EditableSection[] {
+function buildSections(rows: LandingSectionRow[], codes: Language[]): EditableSection[] {
   return LANDING_SECTION_KEYS.map((key) => {
     const row = rows.find((candidate) => candidate.key === key);
 
-    // Prefill every language: DB values merged over the static defaults
+    // Prefill every configured language: DB values merged over the static
+    // defaults (English for languages without a static dictionary)
     const content = Object.fromEntries(
-      LANGUAGE_CODES.map((lang) => [
+      codes.map((lang) => [
         lang,
         {
-          ...(translations[lang][key] as Record<string, string>),
+          ...(getStaticDictionary(lang)[key] as Record<string, string>),
           ...(row?.content?.[lang] ?? {}),
         },
       ])
-    ) as Record<Language, Record<string, string>>;
+    );
 
     return {
       key,
@@ -47,15 +49,15 @@ function buildSections(rows: LandingSectionRow[]): EditableSection[] {
   });
 }
 
-function buildCompanies(rows: LandingCompanyRow[]): LandingCompanyRow[] {
+function buildCompanies(rows: LandingCompanyRow[], codes: Language[]): LandingCompanyRow[] {
   return COMPANIES.map((config, index) => {
     const row = rows.find((candidate) => candidate.slug === config.slug);
 
     const staticName = Object.fromEntries(
-      LANGUAGE_CODES.map((lang) => [lang, translations[lang].companies[config.slug].name])
+      codes.map((lang) => [lang, getStaticDictionary(lang).companies[config.slug].name])
     );
     const staticDescription = Object.fromEntries(
-      LANGUAGE_CODES.map((lang) => [lang, translations[lang].companies[config.slug].description])
+      codes.map((lang) => [lang, getStaticDictionary(lang).companies[config.slug].description])
     );
 
     if (row) {
@@ -86,24 +88,26 @@ export default async function AdminContentPage() {
   // Plain uncached reads — the admin must always see the latest rows.
   // The public landing page reads through the LANDING_CACHE_TAG cache instead,
   // which the save actions expire via updateTag().
-  const [sectionsResult, companiesResult] = await Promise.all([
+  const [languages, sectionsResult, companiesResult] = await Promise.all([
+    fetchSiteLanguages(supabase) as Promise<LanguageInfo[]>,
     supabase.from('landing_sections').select('*'),
     supabase.from('landing_companies').select('*').order('sort_order', { ascending: true }),
   ]);
 
+  const codes = languages.map((lang) => lang.code);
   const sectionRows = (sectionsResult.data ?? []) as LandingSectionRow[];
   const companyRows = (companiesResult.data ?? []) as LandingCompanyRow[];
 
-  const sections = buildSections(sectionRows);
-  const companies = buildCompanies(companyRows);
+  const sections = buildSections(sectionRows, codes);
+  const companies = buildCompanies(companyRows, codes);
 
   return (
     <div className="flex flex-col gap-6">
       <AdminPageHeader
         title="Content"
-        description="Edit the landing page text and images. Changes go live immediately."
+        description="Edit the landing page text and images per language. Changes go live immediately."
       />
-      <ContentEditor sections={sections} companies={companies} />
+      <ContentEditor sections={sections} companies={companies} languages={languages} />
     </div>
   );
 }

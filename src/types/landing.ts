@@ -9,7 +9,7 @@
  * Static files (src/i18n/translations.ts, src/config/companies.ts) remain the
  * fallback/defaults; DB content is deep-merged over them in src/services/landing.ts.
  */
-import type { Language, Translations } from '@/i18n/translations';
+import type { Language, LanguageInfo, Translations } from '@/i18n/translations';
 
 /** Sections whose text is editable via /admin/content. Company text lives in landing_companies. */
 export const LANDING_SECTION_KEYS = [
@@ -83,6 +83,8 @@ export interface LandingCompanyContent {
 
 /** Fully-resolved landing content (DB merged over static fallbacks) */
 export interface LandingContent {
+  /** Enabled site languages in display order (from public.site_languages) */
+  languages: LanguageInfo[];
   translations: Record<Language, Translations>;
   heroImages: { background: string };
   serviceImages: [string, string, string];

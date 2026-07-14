@@ -1,34 +1,39 @@
 /**
- * Supported site languages.
+ * Site languages are configured in the database (public.site_languages,
+ * managed at /admin/languages) — adding one there makes it appear in the
+ * public switcher and as a sub-tab in the content editor, no code change
+ * needed. Its text falls back to English until an admin fills it in.
  *
- * To add a language: append its code here, add an entry to LANGUAGES below,
- * and (optionally) a static dictionary — languages without one fall back to
- * English until an admin fills in the text via /admin/content.
+ * This file only keeps the static fallback dictionaries (en/th/zh) used as
+ * defaults under the DB content, and FALLBACK_LANGUAGES for when Supabase
+ * is unreachable.
  */
-export const LANGUAGE_CODES = ['en', 'th', 'zh'] as const;
-export type Language = (typeof LANGUAGE_CODES)[number];
 
-export const DEFAULT_LANGUAGE: Language = 'en';
+/** A language code such as 'en', 'th', 'zh-tw'. Validated against site_languages at runtime. */
+export type Language = string;
 
+/** The base language: always enabled, and the fallback for missing text */
+export const DEFAULT_LANGUAGE = 'en';
+
+/** Row shape of public.site_languages, shared by the site and the admin CMS */
 export interface LanguageInfo {
   code: Language;
-  /** Short label shown in the public language switcher */
+  /** Short label shown in the public language switcher, e.g. 'EN', '中文' */
   label: string;
-  /** English name, used in the admin CMS field labels */
+  /** English name, used in the admin CMS, e.g. 'Chinese' */
   name: string;
-  /** Native name, used for accessibility labels */
+  /** Native name, e.g. '中文' */
   nativeName: string;
+  enabled: boolean;
+  sortOrder: number;
 }
 
-export const LANGUAGES: LanguageInfo[] = [
-  { code: 'en', label: 'EN', name: 'English', nativeName: 'English' },
-  { code: 'th', label: 'TH', name: 'Thai', nativeName: 'ไทย' },
-  { code: 'zh', label: '中文', name: 'Chinese', nativeName: '中文' },
+/** Static language list — used only when site_languages cannot be read */
+export const FALLBACK_LANGUAGES: LanguageInfo[] = [
+  { code: 'en', label: 'EN', name: 'English', nativeName: 'English', enabled: true, sortOrder: 0 },
+  { code: 'th', label: 'TH', name: 'Thai', nativeName: 'ไทย', enabled: true, sortOrder: 1 },
+  { code: 'zh', label: '中文', name: 'Chinese', nativeName: '中文', enabled: true, sortOrder: 2 },
 ];
-
-export function isLanguage(value: string): value is Language {
-  return (LANGUAGE_CODES as readonly string[]).includes(value);
-}
 
 /**
  * Translation dictionary — add/edit text here for each section.
@@ -232,4 +237,13 @@ const zh: Translations = {
   },
 };
 
-export const translations: Record<Language, Translations> = { en, th, zh };
+/** Static dictionaries — the defaults DB content is merged over */
+export const translations: Record<string, Translations> = { en, th, zh };
+
+/**
+ * Static dictionary for a language code; languages without one (added via
+ * /admin/languages) start from the English text.
+ */
+export function getStaticDictionary(code: Language): Translations {
+  return translations[code] ?? translations[DEFAULT_LANGUAGE];
+}

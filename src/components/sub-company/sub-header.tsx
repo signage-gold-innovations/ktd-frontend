@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { SubCompanyConfig } from '@/config/sub-companies';
 import { useLanguage } from '@/contexts/language-context';
-import { LANGUAGES } from '@/i18n/translations';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
@@ -15,7 +14,7 @@ interface SubHeaderProps {
 
 export function SubHeader({ config }: Readonly<SubHeaderProps>) {
   const { theme } = config;
-  const { language, toggle } = useLanguage();
+  const { language, languages, toggle } = useLanguage();
 
   return (
     <motion.header
@@ -54,7 +53,7 @@ export function SubHeader({ config }: Readonly<SubHeaderProps>) {
             style={{ color: theme.headerText }}
           >
             <FontAwesomeIcon icon={faGlobe} style={{ width: 20, height: 20 }} />
-            <span>{LANGUAGES.find((lang) => lang.code === language)?.label ?? language}</span>
+            <span>{languages.find((lang) => lang.code === language)?.label ?? language}</span>
           </button>
         </div>
       </div>

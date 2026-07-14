@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/language-context';
-import { LANGUAGES } from '@/i18n/translations';
 import { faFacebook, faXTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { faBars, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,7 +24,7 @@ const SOCIAL_ICONS = [
 ] as const;
 
 export function Navbar() {
-  const { language, toggle, t } = useLanguage();
+  const { language, languages, toggle, t } = useLanguage();
 
   return (
     <motion.header
@@ -127,7 +126,7 @@ export function Navbar() {
             className="font-anuphan flex items-center gap-2 rounded-md px-2 py-1 text-[16px] leading-[18px] font-medium text-white transition-colors hover:text-white/80"
           >
             <FontAwesomeIcon icon={faGlobe} style={{ width: 20, height: 20 }} />
-            <span>{LANGUAGES.find((lang) => lang.code === language)?.label ?? language}</span>
+            <span>{languages.find((lang) => lang.code === language)?.label ?? language}</span>
           </button>
         </div>
       </div>

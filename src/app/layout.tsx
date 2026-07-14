@@ -64,7 +64,7 @@ export default async function RootLayout({
      * language from context and keeps the <html lang="..."> attribute in sync.
      * It must live inside <LanguageProvider> to consume the context.
      */
-    <LanguageProvider translations={content.translations}>
+    <LanguageProvider translations={content.translations} languages={content.languages}>
       <LanguageHtmlWrapper className={cn('h-full antialiased', anuphan.variable, manrope.variable)}>
         <body className="flex min-h-full flex-col">
           <AnalyticsTracker />

@@ -11,6 +11,7 @@ const navItems = [
   { label: 'Dashboard', href: '/admin', icon: '◻' },
   { label: 'Content', href: '/admin/content', icon: '✏️' },
   { label: 'Media', href: '/admin/media', icon: '🖼' },
+  { label: 'Languages', href: '/admin/languages', icon: '🌐' },
 ];
 
 export function AdminSidebar({ user }: { user: User }) {

@@ -10,8 +10,8 @@ import { faArrowLeft, faArrowRight, faGlobe } from '@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion, useInView } from 'motion/react';
 
-/** Text per language — 'en' is always present as the fallback */
-type LocalizedString = { en: string } & Partial<Record<Language, string>>;
+/** Text keyed by language code — English is the fallback */
+type LocalizedString = Record<Language, string>;
 
 interface CompanyShowcaseProps {
   /** Used as the section's id attribute for in-page anchor navigation */

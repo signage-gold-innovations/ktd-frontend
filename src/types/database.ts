@@ -134,6 +134,35 @@ export type Database = {
           device?: 'mobile' | 'tablet' | 'desktop' | null;
         };
       };
+      site_languages: {
+        Row: {
+          code: string;
+          label: string;
+          name: string;
+          native_name: string;
+          enabled: boolean;
+          sort_order: number;
+          updated_at: string;
+        };
+        Insert: {
+          code: string;
+          label: string;
+          name: string;
+          native_name: string;
+          enabled?: boolean;
+          sort_order?: number;
+          updated_at?: string;
+        };
+        Update: {
+          code?: string;
+          label?: string;
+          name?: string;
+          native_name?: string;
+          enabled?: boolean;
+          sort_order?: number;
+          updated_at?: string;
+        };
+      };
       // Add your other tables here...
     };
     Views: Record<string, never>;
@@ -160,3 +189,4 @@ export type AdminUserUpdate = Database['public']['Tables']['admin_users']['Updat
 export type LandingSectionRecord = Database['public']['Tables']['landing_sections']['Row'];
 export type LandingCompanyRecord = Database['public']['Tables']['landing_companies']['Row'];
 export type LandingEventRecord = Database['public']['Tables']['landing_events']['Row'];
+export type SiteLanguageRecord = Database['public']['Tables']['site_languages']['Row'];

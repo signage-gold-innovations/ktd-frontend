@@ -6,11 +6,13 @@ import {
   LANDING_CACHE_TAG,
 } from '@/config/landing-cms';
 import {
-  LANGUAGE_CODES,
-  translations as staticTranslations,
+  FALLBACK_LANGUAGES,
+  getStaticDictionary,
   type Language,
+  type LanguageInfo,
   type Translations,
 } from '@/i18n/translations';
+import { fetchSiteLanguages } from '@/services/languages';
 
 import {
   LANDING_SECTION_KEYS,
@@ -46,17 +48,26 @@ function mergeSection(
   }
 }
 
-/** Build a Record<Language, string> by resolving each language with an English fallback */
-function localize(resolve: (lang: Language) => string | undefined): Record<Language, string> {
-  const english = resolve('en') ?? '';
+/** Base dictionaries for each active language: static text, English where none exists */
+function buildBaseTranslations(codes: Language[]): Record<Language, Translations> {
   return Object.fromEntries(
-    LANGUAGE_CODES.map((lang) => [lang, resolve(lang) || english])
-  ) as Record<Language, string>;
+    codes.map((code) => [code, structuredClone(getStaticDictionary(code))])
+  );
+}
+
+/** Build a Record<Language, string> by resolving each language with an English fallback */
+function localize(
+  codes: Language[],
+  resolve: (lang: Language) => string | undefined
+): Record<Language, string> {
+  const english = resolve('en') ?? '';
+  return Object.fromEntries(codes.map((lang) => [lang, resolve(lang) || english]));
 }
 
 /** Resolve a static COMPANIES entry + its translation text into LandingCompanyContent */
 function staticCompanyContent(
   config: CompanyConfig,
+  codes: Language[],
   merged: Record<Language, Translations>
 ): LandingCompanyContent {
   return {
@@ -65,34 +76,36 @@ function staticCompanyContent(
     bottomImage: config.bottomImage,
     socialLinks: config.socialLinks,
     images: config.images,
-    name: localize((lang) => merged[lang].companies[config.slug].name),
-    description: localize((lang) => merged[lang].companies[config.slug].description),
+    name: localize(codes, (lang) => merged[lang]?.companies[config.slug].name),
+    description: localize(codes, (lang) => merged[lang]?.companies[config.slug].description),
   };
 }
 
 /** Map a landing_companies row to LandingCompanyContent, falling back to static config per field */
 function mapCompanyRow(
   row: LandingCompanyRow,
+  codes: Language[],
   merged: Record<Language, Translations>
 ): LandingCompanyContent {
   const fallback = COMPANIES.find((company) => company.slug === row.slug);
   const staticText = isKnownSlug(row.slug)
     ? {
-        name: (lang: Language) => staticTranslations[lang].companies[row.slug as KnownSlug].name,
+        name: (lang: Language) => getStaticDictionary(lang).companies[row.slug as KnownSlug].name,
         description: (lang: Language) =>
-          staticTranslations[lang].companies[row.slug as KnownSlug].description,
+          getStaticDictionary(lang).companies[row.slug as KnownSlug].description,
       }
     : undefined;
 
-  const name = localize((lang) => row.name?.[lang] || staticText?.name(lang) || row.slug);
+  const name = localize(codes, (lang) => row.name?.[lang] || staticText?.name(lang) || row.slug);
   const description = localize(
+    codes,
     (lang) => row.description?.[lang] || staticText?.description(lang) || ''
   );
 
   // Overlay the resolved company text onto the merged translations so client
   // components reading t.companies[slug] see the DB values too.
   if (isKnownSlug(row.slug)) {
-    for (const lang of LANGUAGE_CODES) {
+    for (const lang of codes) {
       merged[lang].companies[row.slug] = { name: name[lang], description: description[lang] };
     }
   }
@@ -113,13 +126,25 @@ function mapCompanyRow(
 
 /** Fully-static content — used whenever Supabase is unreachable or empty */
 function buildStaticContent(): LandingContent {
-  const merged = structuredClone(staticTranslations);
+  const languages = FALLBACK_LANGUAGES;
+  const codes = languages.map((lang) => lang.code);
+  const merged = buildBaseTranslations(codes);
   return {
+    languages,
     translations: merged,
     heroImages: { background: DEFAULT_HERO_BACKGROUND },
     serviceImages: [...DEFAULT_SERVICE_IMAGES],
-    companies: COMPANIES.map((company) => staticCompanyContent(company, merged)),
+    companies: COMPANIES.map((company) => staticCompanyContent(company, codes, merged)),
   };
+}
+
+/** Enabled languages only, with the base language guaranteed present */
+function enabledLanguages(all: LanguageInfo[]): LanguageInfo[] {
+  const enabled = all.filter((lang) => lang.enabled);
+  if (!enabled.some((lang) => lang.code === 'en')) {
+    enabled.unshift(FALLBACK_LANGUAGES[0]);
+  }
+  return enabled;
 }
 
 /**
@@ -135,7 +160,8 @@ async function fetchLandingContent(): Promise<LandingContent> {
   try {
     const supabase = createPublicClient();
 
-    const [sectionsResult, companiesResult] = await Promise.all([
+    const [languagesAll, sectionsResult, companiesResult] = await Promise.all([
+      fetchSiteLanguages(supabase),
       supabase.from('landing_sections').select('key, content, images'),
       supabase
         .from('landing_companies')
@@ -146,14 +172,16 @@ async function fetchLandingContent(): Promise<LandingContent> {
     if (sectionsResult.error) throw sectionsResult.error;
     if (companiesResult.error) throw companiesResult.error;
 
+    const languages = enabledLanguages(languagesAll);
+    const codes = languages.map((lang) => lang.code);
     const sections = (sectionsResult.data ?? []) as LandingSectionRow[];
     const companyRows = (companiesResult.data ?? []) as LandingCompanyRow[];
 
-    // 1. Merge section text (per language) over a clone of the static translations
-    const merged = structuredClone(staticTranslations);
+    // 1. Merge section text (per language) over the static base dictionaries
+    const merged = buildBaseTranslations(codes);
     for (const section of sections) {
       if (!LANDING_SECTION_KEYS.includes(section.key)) continue;
-      for (const lang of LANGUAGE_CODES) {
+      for (const lang of codes) {
         mergeSection(merged[lang][section.key] as Record<string, string>, section.content?.[lang]);
       }
     }
@@ -165,10 +193,11 @@ async function fetchLandingContent(): Promise<LandingContent> {
     // 3. Resolve companies — DB rows win, static COMPANIES fills any gaps
     const companies =
       companyRows.length > 0
-        ? companyRows.map((row) => mapCompanyRow(row, merged))
-        : COMPANIES.map((company) => staticCompanyContent(company, merged));
+        ? companyRows.map((row) => mapCompanyRow(row, codes, merged))
+        : COMPANIES.map((company) => staticCompanyContent(company, codes, merged));
 
     return {
+      languages,
       translations: merged,
       heroImages: { background: heroImages?.background || DEFAULT_HERO_BACKGROUND },
       serviceImages: [
@@ -188,8 +217,8 @@ async function fetchLandingContent(): Promise<LandingContent> {
  * getLandingContent — cached landing page content.
  *
  * Cached via unstable_cache and tagged with LANDING_CACHE_TAG so admin server
- * actions can invalidate it on write; also time-revalidated hourly as a
- * safety net.
+ * actions (content edits AND language changes) can invalidate it on write;
+ * also time-revalidated hourly as a safety net.
  */
 export const getLandingContent = unstable_cache(fetchLandingContent, ['landing-content'], {
   tags: [LANDING_CACHE_TAG],
