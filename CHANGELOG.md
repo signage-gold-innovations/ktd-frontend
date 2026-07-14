@@ -4,6 +4,19 @@ All notable changes to this project are documented here. Follow semantic version
 
 ---
 
+## [2026-07-15] Language Dropdown & Solar Icons in Admin
+
+### Added 🆕
+
+- `src/components/landing/language-dropdown.tsx` — the language button on the landing page and sub-company headers now opens a dropdown popup listing every enabled language (native name + English name, active one checked) instead of cycling on click; closes on outside click/Escape, animated with motion, dark glassy style on the landing navbar and light style on sub-company headers
+- `@solar-icons/react@2.0.0-beta.0` — Solar Icons v2 (the version documented at solar-icons.vercel.app/docs/v2; v2 is published under the beta tag)
+
+### Changed 🔄
+
+- Admin CMS icons now use Solar linear icons: sidebar (Chart Square / Document Text / Gallery / Translation replace the emoji), sign-out button (Logout), language manager (Arrow Up/Down for reordering, Trash for remove)
+
+---
+
 ## [2026-07-15] Language Settings Page & Content Editor Language Tabs
 
 ### Added 🆕

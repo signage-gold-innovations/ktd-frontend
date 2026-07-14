@@ -8,6 +8,7 @@ import { faBars, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'motion/react';
 
+import { LanguageDropdown } from '@/components/landing/language-dropdown';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const SIDEBAR_COMPANIES = [
@@ -24,7 +25,7 @@ const SOCIAL_ICONS = [
 ] as const;
 
 export function Navbar() {
-  const { language, languages, toggle, t } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <motion.header
@@ -120,14 +121,7 @@ export function Navbar() {
 
         {/* Language switcher — right */}
         <div className="ml-auto">
-          <button
-            onClick={toggle}
-            aria-label="Change language"
-            className="font-anuphan flex items-center gap-2 rounded-md px-2 py-1 text-[16px] leading-[18px] font-medium text-white transition-colors hover:text-white/80"
-          >
-            <FontAwesomeIcon icon={faGlobe} style={{ width: 20, height: 20 }} />
-            <span>{languages.find((lang) => lang.code === language)?.label ?? language}</span>
-          </button>
+          <LanguageDropdown appearance="dark" />
         </div>
       </div>
     </motion.header>

@@ -3,6 +3,9 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { DEFAULT_LANGUAGE, type LanguageInfo } from '@/i18n/translations';
+import { ArrowDownIcon } from '@solar-icons/react/linear/arrow-down';
+import { ArrowUpIcon } from '@solar-icons/react/linear/arrow-up';
+import { TrashBinTrashIcon } from '@solar-icons/react/linear/trash-bin-trash';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -145,7 +148,7 @@ export function LanguageManager({ languages }: { languages: LanguageInfo[] }) {
                           onClick={() => handleMove(index, -1)}
                           aria-label={`Move ${lang.name} up`}
                         >
-                          ↑
+                          <ArrowUpIcon size={14} color="currentColor" aria-hidden />
                         </Button>
                         <Button
                           type="button"
@@ -155,7 +158,7 @@ export function LanguageManager({ languages }: { languages: LanguageInfo[] }) {
                           onClick={() => handleMove(index, 1)}
                           aria-label={`Move ${lang.name} down`}
                         >
-                          ↓
+                          <ArrowDownIcon size={14} color="currentColor" aria-hidden />
                         </Button>
                         <Button
                           type="button"
@@ -174,6 +177,7 @@ export function LanguageManager({ languages }: { languages: LanguageInfo[] }) {
                           disabled={isPending || lang.code === DEFAULT_LANGUAGE}
                           onClick={() => handleDelete(lang)}
                         >
+                          <TrashBinTrashIcon size={14} color="currentColor" aria-hidden />
                           Remove
                         </Button>
                       </div>
