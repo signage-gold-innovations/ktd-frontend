@@ -29,14 +29,17 @@ export async function middleware(request: NextRequest) {
   );
 
   // Do not run code between createServerClient and
-  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
+  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  // IMPORTANT: getClaims() validates the JWT signature against the project's
-  // published public keys every time. Never use getSession() in server code —
-  // it isn't guaranteed to revalidate the Auth token.
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
+  // IMPORTANT: getUser() sends the access token to Supabase's auth server for
+  // validation AND triggers automatic token refresh when the access token is
+  // expired but the refresh token is still valid. This refresh calls setAll()
+  // above, which propagates the new tokens to the response cookies — ensuring
+  // downstream server components and server actions get a valid session.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
 

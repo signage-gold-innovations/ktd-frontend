@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChartSquareIcon } from '@solar-icons/react/linear/chart-square';
 import { DocumentTextIcon } from '@solar-icons/react/linear/document-text';
+import { FireIcon } from '@solar-icons/react/linear/fire';
 import { GalleryIcon } from '@solar-icons/react/linear/gallery';
 import { TranslationIcon } from '@solar-icons/react/linear/translation';
 
@@ -13,6 +14,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { label: 'Dashboard', href: '/admin', icon: ChartSquareIcon },
+  { label: 'Heatmap', href: '/admin/heatmap', icon: FireIcon },
   { label: 'Content', href: '/admin/content', icon: DocumentTextIcon },
   { label: 'Media', href: '/admin/media', icon: GalleryIcon },
   { label: 'Languages', href: '/admin/languages', icon: TranslationIcon },
