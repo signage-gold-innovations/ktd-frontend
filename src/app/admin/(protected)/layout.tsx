@@ -12,11 +12,12 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
   }
 
   return (
-    <div className="bg-muted/40 flex min-h-screen">
+    // h-dvh + overflow-hidden pins the shell to the viewport; only <main> scrolls
+    <div className="bg-muted/40 flex h-dvh overflow-hidden">
       <AdminSidebar user={user} />
-      <div className="flex flex-1 flex-col">
-        <AdminHeader user={user} />
-        <main className="flex-1 p-6">{children}</main>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <AdminHeader />
+        <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
   );

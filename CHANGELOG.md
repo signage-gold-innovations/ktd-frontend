@@ -4,6 +4,80 @@ All notable changes to this project are documented here. Follow semantic version
 
 ---
 
+## [2026-07-15] Admin Analytics Dashboard, Multi-language CMS & Cleanup
+
+### Added 🆕
+
+- `migrations/003_multilang_and_analytics.sql` — converts `landing_sections` to a locale-keyed `content` JSONB and `landing_companies` to locale-keyed `name`/`description` JSONB (existing EN/TH data migrated in place); creates `public.landing_events` (anonymous visitor events, anon insert-only / admin read via RLS)
+- **Analytics tracking** — `src/lib/analytics.ts` (anonymous per-tab session id, `track()` via sendBeacon/fetch, never runs on `/admin`), `AnalyticsTracker` in the root layout (page views on every route change + delegated clicks on `data-track` elements), and `POST /api/track` (Zod-validated, size-capped ingest with the anon key)
+- **Dashboard** (`/admin`) now shows real data: page views / unique visitors / interactions / views today, a 14-day daily-views chart, top pages, top interactions, language & device breakdowns, and a recent-events table; shows setup guidance if migration 003 isn't applied
+- Instrumented hero CTA, navbar company links & social icons, showcase social links, footer social links (`data-track` attributes) and language switches
+- **Chinese (中文)** as a third site language with static fallback translations; languages are now config-driven via `LANGUAGES`/`LANGUAGE_CODES` in `src/i18n/translations.ts` — adding a language is one entry there
+
+### Changed 🔄
+
+- `/admin/content` editor renders one field per configured language (English/Thai/Chinese) for every section and company — new languages appear automatically
+- Content save actions, `getLandingContent()` merge logic, types (`landing.ts`, `database.ts`) all locale-keyed; languages missing DB or static text fall back to English
+- Public language switcher cycles EN → TH → 中文; stored/browser language validated against the configured list
+- Admin header shows only the sign-out button (login email removed)
+
+### Removed 🗑️
+
+- `/admin/pages` and `/admin/settings` placeholder sections and their sidebar links
+
+### Migration Steps
+
+1. Apply `migrations/003_multilang_and_analytics.sql` _(already applied to the KTD Supabase project on 2026-07-15)_
+2. Analytics starts recording immediately; the dashboard reads the last 30 days
+
+---
+
+## [2026-07-09] Performance & AI-Search (GEO) Optimization
+
+### Added 🆕
+
+- `src/app/robots.ts` — allows all crawlers plus an explicit allowlist of AI search bots (GPTBot, ClaudeBot, PerplexityBot, etc.); `/admin` excluded from indexing; links the sitemap
+- `src/app/sitemap.ts` — sitemap for `/` and configured sub-company pages
+- `public/llms.txt` — llms.txt summary of the group and portfolio companies for AI answer engines
+- `src/app/[company]/layout.tsx` — per-company `generateMetadata` (title/description/canonical/OG); unknown slugs get `noindex`
+- `src/config/site.ts` — `SITE_URL` (override with `NEXT_PUBLIC_SITE_URL`)
+
+### Changed 🔄
+
+- Home page JSON-LD is now built from live CMS content (`subOrganization` entries with EN/TH names, descriptions, real social links) instead of a static blob
+- Root layout sets `metadataBase`; home page sets a canonical URL
+- Compressed hero background (1.7 MB PNG → 208 KB JPEG) and three 3 MB PNGs (→ ~590 KB JPEG each); storage bucket and DB rows updated to the compressed versions
+
+---
+
+## [2026-07-09] CMS-Editable Landing Page (Content & Images)
+
+### Added 🆕
+
+- `migrations/002_create_landing_content.sql` — `landing_sections` (per-section EN/TH JSONB text + editable images) and `landing_companies` tables, RLS (public read, admin-only writes via `is_admin()` helper), `landing-media` public Storage bucket with admin-only write policies, and seed data reproducing the current static content
+- `src/services/landing.ts` — `getLandingContent()`: cached (`unstable_cache` + `landing-content` tag, hourly revalidate) fetch that deep-merges DB content over the static defaults and degrades to fully-static content on any Supabase failure
+- `src/lib/supabase/public.ts` — cookie-less anon client, safe inside `unstable_cache`
+- `/admin/content` — working editor: per-section EN/TH forms (Hero, About, Services, Navigation, Footer & Social) and per-company forms (names, descriptions, colors, social links, images), saving via server actions that validate with Zod, guard with `checkAdminAccess()`, and expire the cache with `updateTag()` so edits go live immediately
+- `/admin/media` — media library for the `landing-media` bucket: multi-file upload, thumbnail grid, copy URL, delete
+- `src/lib/storage-client.ts` — browser-side upload/list/delete helpers for the bucket
+- `src/types/landing.ts` + `src/config/landing-cms.ts` — shared content types and CMS constants (cache tag, bucket name, default images)
+- UI primitives: `input.tsx`, `textarea.tsx`, `label.tsx`
+
+### Changed 🔄
+
+- Root layout fetches CMS content and feeds it to `LanguageProvider`; `Hero` and `Services` accept image props; home page renders companies from DB-backed content
+- `src/i18n/translations.ts` — dropped `as const` so DB strings are assignable; the file now serves as the fallback/defaults for CMS content
+- `next.config.ts` — `images.remotePatterns` for the Supabase Storage host (derived from `NEXT_PUBLIC_SUPABASE_URL`)
+- `src/types/database.ts` — added `Json` type and the two new table definitions
+
+### Migration Steps
+
+1. Apply `migrations/002_create_landing_content.sql` (SQL editor or `supabase db push`)
+2. Ensure your user exists in `admin_users` with `is_admin = true` (required for writes; reads are public)
+3. Edit content at `/admin/content`, manage images at `/admin/media`
+
+---
+
 ## [2026-04-25] Pre-commit Auto-formatting with lint-staged
 
 ### Added 🆕

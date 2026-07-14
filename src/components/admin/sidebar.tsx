@@ -9,10 +9,8 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { label: 'Dashboard', href: '/admin', icon: '◻' },
-  { label: 'Pages', href: '/admin/pages', icon: '📄' },
   { label: 'Content', href: '/admin/content', icon: '✏️' },
   { label: 'Media', href: '/admin/media', icon: '🖼' },
-  { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
 ];
 
 export function AdminSidebar({ user }: { user: User }) {
@@ -24,7 +22,7 @@ export function AdminSidebar({ user }: { user: User }) {
         <span className="text-base font-semibold tracking-tight">Admin CMS</span>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 p-3">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
         {navItems.map((item) => {
           const isActive =
             item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href);

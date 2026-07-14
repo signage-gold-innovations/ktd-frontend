@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/language-context';
+import { LANGUAGES } from '@/i18n/translations';
 import { faFacebook, faXTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { faBars, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -74,6 +75,8 @@ export function Navbar() {
                 <div key={company.key}>
                   <Link
                     href={company.href}
+                    data-track="nav_click"
+                    data-track-target={company.key}
                     className="font-anuphan flex items-center justify-between py-4 text-[18px] leading-[140%] font-bold text-white transition-colors hover:bg-white/5"
                   >
                     <span>{t.companies[company.key].name}</span>
@@ -97,6 +100,8 @@ export function Navbar() {
                   key={label}
                   href="#"
                   aria-label={label}
+                  data-track="social_click"
+                  data-track-target={`navbar:${label}`}
                   className="text-white transition-opacity hover:opacity-70"
                 >
                   <FontAwesomeIcon icon={icon} style={{ width: 20, height: 20 }} />
@@ -118,11 +123,11 @@ export function Navbar() {
         <div className="ml-auto">
           <button
             onClick={toggle}
-            aria-label={`Switch to ${language === 'en' ? 'Thai' : 'English'}`}
+            aria-label="Change language"
             className="font-anuphan flex items-center gap-2 rounded-md px-2 py-1 text-[16px] leading-[18px] font-medium text-white transition-colors hover:text-white/80"
           >
             <FontAwesomeIcon icon={faGlobe} style={{ width: 20, height: 20 }} />
-            <span>{language.toUpperCase()}</span>
+            <span>{LANGUAGES.find((lang) => lang.code === language)?.label ?? language}</span>
           </button>
         </div>
       </div>

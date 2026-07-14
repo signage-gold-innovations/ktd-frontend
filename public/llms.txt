@@ -1,0 +1,15 @@
+# KTD Group
+
+> KTD Group is a Thai "Full-Spectrum Technopreneur" holding group led by Tod Sirawattananon, bridging deep technical engineering and entrepreneurial growth. The group engineers systematic solutions — robust infrastructure and automated workflows that let ventures scale without breaking — across satellite data, rock quarry operations, and brick manufacturing.
+
+KTD Group operates from the engine room to the boardroom: systematic problem solving, venture scaling, and automated infrastructure. Content is available in English and Thai.
+
+## Portfolio Companies
+
+- [Hiterratech](https://ktdgroup.co/hiterratech): Integrated business and engineering solutions specializing in the mining industry, smart ICT solutions, and innovative technology. Divisions include Hiterratech Energy (solar and renewable sourcing), Hiterratech Aerial (aerial imaging and 3D reconstruction), Hiterratech Trading (global goods sourcing), and Hiterratech Mining (crushing and mineral-processing machinery).
+- Silachai Charoen (ศิลาชัยเจริญ): Rock quarry operations.
+- Kitthana Sap (กิจธนาทรัพย์): Brick manufacturing.
+
+## Main Site
+
+- [Home](https://ktdgroup.co/): Group overview, services, and company showcases in English and Thai.

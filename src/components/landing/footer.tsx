@@ -34,6 +34,8 @@ export function Footer() {
               key={label}
               href={href}
               aria-label={label}
+              data-track="social_click"
+              data-track-target={`footer:${label}`}
               className="text-white transition-opacity hover:opacity-70"
             >
               <FontAwesomeIcon icon={icon} style={{ width: 20, height: 20 }} />

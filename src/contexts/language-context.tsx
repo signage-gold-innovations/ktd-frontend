@@ -1,29 +1,47 @@
 'use client';
 
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { translations, type Language } from '@/i18n/translations';
+import {
+  DEFAULT_LANGUAGE,
+  isLanguage,
+  LANGUAGE_CODES,
+  translations as staticTranslations,
+  type Language,
+  type Translations,
+} from '@/i18n/translations';
+
+import { track } from '@/lib/analytics';
 
 const STORAGE_KEY = 'ktd-language';
 
 function getInitialLanguage(): Language {
-  if (typeof globalThis.window === 'undefined') return 'en';
+  if (typeof globalThis.window === 'undefined') return DEFAULT_LANGUAGE;
   const stored = globalThis.localStorage.getItem(STORAGE_KEY);
-  if (stored === 'en' || stored === 'th') return stored;
+  if (stored && isLanguage(stored)) return stored;
   // Fall back to browser language preference
-  return globalThis.navigator.language.startsWith('th') ? 'th' : 'en';
+  const browser = globalThis.navigator.language.toLowerCase();
+  return LANGUAGE_CODES.find((code) => browser.startsWith(code)) ?? DEFAULT_LANGUAGE;
 }
 
 type LanguageContextValue = {
   language: Language;
   setLanguage: (lang: Language) => void;
+  /** Cycle to the next language in LANGUAGE_CODES order */
   toggle: () => void;
-  t: (typeof translations)['en'];
+  t: Translations;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-export function LanguageProvider({ children }: { readonly children: React.ReactNode }) {
-  const [language, setLang] = useState<Language>('en');
+export function LanguageProvider({
+  children,
+  translations = staticTranslations,
+}: {
+  readonly children: React.ReactNode;
+  /** CMS-merged dictionaries from getLandingContent(); defaults to the static bundle */
+  readonly translations?: Record<Language, Translations>;
+}) {
+  const [language, setLang] = useState<Language>(DEFAULT_LANGUAGE);
 
   // Hydrate from localStorage after mount to avoid SSR mismatch
   useEffect(() => {
@@ -37,10 +55,12 @@ export function LanguageProvider({ children }: { readonly children: React.ReactN
     } catch {
       // localStorage may be unavailable in private browsing on some browsers
     }
+    track({ type: 'language_switch', target: lang });
   }
 
   function toggle() {
-    setLanguage(language === 'en' ? 'th' : 'en');
+    const index = LANGUAGE_CODES.indexOf(language);
+    setLanguage(LANGUAGE_CODES[(index + 1) % LANGUAGE_CODES.length]);
   }
 
   const value = useMemo(
@@ -48,10 +68,10 @@ export function LanguageProvider({ children }: { readonly children: React.ReactN
       language,
       setLanguage,
       toggle,
-      t: translations[language] as (typeof translations)['en'],
+      t: translations[language] ?? staticTranslations[language],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [language]
+    [language, translations]
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
