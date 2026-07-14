@@ -24,6 +24,8 @@ const eventSchema = z.object({
   referrer: z.string().max(600).optional(),
   target: z.string().max(120).optional(),
   device: z.enum(['mobile', 'tablet', 'desktop']).optional(),
+  x: z.number().min(0).max(1).optional(),
+  y: z.number().min(0).max(1).optional(),
 });
 
 export async function POST(request: Request) {
@@ -39,7 +41,7 @@ export async function POST(request: Request) {
     return new Response(null, { status: 400 });
   }
 
-  const { session_id, event_type, path, language, referrer, target, device } = parsed.data;
+  const { session_id, event_type, path, language, referrer, target, device, x, y } = parsed.data;
 
   try {
     const supabase = createPublicClient();
@@ -51,6 +53,8 @@ export async function POST(request: Request) {
       referrer: referrer ?? null,
       target: target ?? null,
       device: device ?? null,
+      x_ratio: x ?? null,
+      y_ratio: y ?? null,
     });
     if (error) {
       console.error('[analytics] Failed to record event:', error.message);

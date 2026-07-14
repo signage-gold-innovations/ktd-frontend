@@ -80,9 +80,12 @@ export async function getLandingAnalytics(): Promise<LandingAnalytics | null> {
   let rows: EventRow[];
   try {
     const supabase = await createClient();
+    // Raw 'click' events feed the /admin/heatmap page, not the dashboard —
+    // excluding them here keeps the row budget for meaningful events.
     const { data, error } = await supabase
       .from('landing_events')
       .select('occurred_at, event_type, path, session_id, language, device, target')
+      .neq('event_type', 'click')
       .gte('occurred_at', since)
       .order('occurred_at', { ascending: false })
       .limit(ROW_LIMIT);

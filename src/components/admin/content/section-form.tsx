@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { translations, type LanguageInfo } from '@/i18n/translations';
+import { toast } from 'react-toastify';
 
 import { ImageField } from '@/components/admin/content/image-field';
 import { LanguageTabs } from '@/components/admin/content/language-tabs';
@@ -67,7 +68,6 @@ export function SectionForm({ section, title, description, languages }: SectionF
   const [content, setContent] = useState(section.content);
   const [images, setImages] = useState(section.images);
   const [activeLang, setActiveLang] = useState(languages[0]?.code ?? 'en');
-  const [status, setStatus] = useState<SaveStatus>(null);
   const [isPending, startTransition] = useTransition();
 
   // Canonical field list comes from the static translations, so newly added
@@ -84,18 +84,17 @@ export function SectionForm({ section, title, description, languages }: SectionF
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setStatus(null);
     startTransition(async () => {
       const result = await saveSection({
         key: section.key,
         content,
         images: imageFields.length > 0 ? images : undefined,
       });
-      setStatus(
-        result.ok
-          ? { type: 'success', message: 'Saved. All languages of this section are updated.' }
-          : { type: 'error', message: result.error }
-      );
+      if (result.ok) {
+        toast.success('Saved. All languages of this section are updated.');
+      } else {
+        toast.error(result.error);
+      }
     });
   };
 
@@ -156,15 +155,6 @@ export function SectionForm({ section, title, description, languages }: SectionF
           <p className="text-muted-foreground text-xs">
             Saving stores every language, not just the open tab.
           </p>
-          {status && (
-            <p
-              className={
-                status.type === 'success' ? 'text-sm text-emerald-600' : 'text-destructive text-sm'
-              }
-            >
-              {status.message}
-            </p>
-          )}
         </CardFooter>
       </form>
     </Card>

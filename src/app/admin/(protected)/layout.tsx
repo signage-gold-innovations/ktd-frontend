@@ -3,6 +3,7 @@ import { getAuthUser } from '@/services/auth';
 
 import { AdminHeader } from '@/components/admin/header';
 import { AdminSidebar } from '@/components/admin/sidebar';
+import { ToastProvider } from '@/components/admin/toast-provider';
 
 export default async function AdminProtectedLayout({ children }: { children: React.ReactNode }) {
   const user = await getAuthUser();
@@ -19,6 +20,7 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
         <AdminHeader />
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
+      <ToastProvider />
     </div>
   );
 }

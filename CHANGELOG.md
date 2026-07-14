@@ -4,6 +4,21 @@ All notable changes to this project are documented here. Follow semantic version
 
 ---
 
+## [2026-07-15] Landing Page Click Heatmap
+
+### Added 🆕
+
+- `migrations/005_click_heatmap.sql` — allows a new `click` event type on `landing_events` and adds `x_ratio`/`y_ratio` (0..1) coordinate columns
+- Every click on the public landing page is now recorded with coordinates normalized to viewport width / document height, bucketed by device; tracking is suppressed inside iframes so the admin preview never pollutes the data
+- **`/admin/heatmap`** — new sidebar section (Fire icon): renders the live landing page in a full-height iframe with a canvas density overlay (blue → green → yellow → red), device filter tabs (desktop / tablet / mobile, iframe width matched to the bucket), click counts for the last 30 days, and setup/empty states
+- `src/services/heatmap.ts` — admin-only fetch of click points (path `/`, per device, 20k row cap)
+
+### Changed 🔄
+
+- Dashboard analytics exclude raw `click` events (they feed the heatmap, not the interaction stats)
+
+---
+
 ## [2026-07-15] Language Dropdown & Solar Icons in Admin
 
 ### Added 🆕

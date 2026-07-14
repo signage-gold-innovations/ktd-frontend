@@ -104,34 +104,58 @@ export type Database = {
           id: string;
           occurred_at: string;
           session_id: string;
-          event_type: 'page_view' | 'language_switch' | 'cta_click' | 'social_click' | 'nav_click';
+          event_type:
+            | 'page_view'
+            | 'language_switch'
+            | 'cta_click'
+            | 'social_click'
+            | 'nav_click'
+            | 'click';
           path: string;
           language: string | null;
           referrer: string | null;
           target: string | null;
           device: 'mobile' | 'tablet' | 'desktop' | null;
+          x_ratio: number | null;
+          y_ratio: number | null;
         };
         Insert: {
           id?: string;
           occurred_at?: string;
           session_id: string;
-          event_type: 'page_view' | 'language_switch' | 'cta_click' | 'social_click' | 'nav_click';
+          event_type:
+            | 'page_view'
+            | 'language_switch'
+            | 'cta_click'
+            | 'social_click'
+            | 'nav_click'
+            | 'click';
           path: string;
           language?: string | null;
           referrer?: string | null;
           target?: string | null;
           device?: 'mobile' | 'tablet' | 'desktop' | null;
+          x_ratio?: number | null;
+          y_ratio?: number | null;
         };
         Update: {
           id?: string;
           occurred_at?: string;
           session_id?: string;
-          event_type?: 'page_view' | 'language_switch' | 'cta_click' | 'social_click' | 'nav_click';
+          event_type?:
+            | 'page_view'
+            | 'language_switch'
+            | 'cta_click'
+            | 'social_click'
+            | 'nav_click'
+            | 'click';
           path?: string;
           language?: string | null;
           referrer?: string | null;
           target?: string | null;
           device?: 'mobile' | 'tablet' | 'desktop' | null;
+          x_ratio?: number | null;
+          y_ratio?: number | null;
         };
       };
       site_languages: {

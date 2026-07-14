@@ -2,10 +2,10 @@
 
 import { useState, useTransition } from 'react';
 import type { LanguageInfo } from '@/i18n/translations';
+import { toast } from 'react-toastify';
 
 import { ImageField } from '@/components/admin/content/image-field';
 import { LanguageTabs } from '@/components/admin/content/language-tabs';
-import type { SaveStatus } from '@/components/admin/content/section-form';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -42,12 +42,10 @@ export function CompanyForm({ company, languages }: CompanyFormProps) {
   const [socialLinks, setSocialLinks] = useState<CompanySocialLinks>(company.social_links);
   const [images, setImages] = useState(company.images);
   const [activeLang, setActiveLang] = useState(languages[0]?.code ?? 'en');
-  const [status, setStatus] = useState<SaveStatus>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setStatus(null);
     startTransition(async () => {
       const result = await saveCompany({
         slug: company.slug as 'hiterratech' | 'silachai' | 'kitthana',
@@ -59,11 +57,11 @@ export function CompanyForm({ company, languages }: CompanyFormProps) {
         images,
         sort_order: company.sort_order,
       });
-      setStatus(
-        result.ok
-          ? { type: 'success', message: 'Saved. All languages of this company are updated.' }
-          : { type: 'error', message: result.error }
-      );
+      if (result.ok) {
+        toast.success('Saved. All languages of this company are updated.');
+      } else {
+        toast.error(result.error);
+      }
     });
   };
 
@@ -167,15 +165,6 @@ export function CompanyForm({ company, languages }: CompanyFormProps) {
           <p className="text-muted-foreground text-xs">
             Saving stores every language, not just the open tab.
           </p>
-          {status && (
-            <p
-              className={
-                status.type === 'success' ? 'text-sm text-emerald-600' : 'text-destructive text-sm'
-              }
-            >
-              {status.message}
-            </p>
-          )}
         </CardFooter>
       </form>
     </Card>

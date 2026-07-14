@@ -15,6 +15,8 @@ export const TRACKED_EVENT_TYPES = [
   'cta_click',
   'social_click',
   'nav_click',
+  'click',
+  'move',
 ] as const;
 export type TrackedEventType = (typeof TRACKED_EVENT_TYPES)[number];
 
@@ -24,6 +26,10 @@ export interface TrackEventInput {
   target?: string;
   /** First page view of a session carries the document referrer */
   referrer?: string;
+  /** 'click' events: X as a fraction of the viewport width (0..1) */
+  x?: number;
+  /** 'click' events: Y as a fraction of the full document height (0..1) */
+  y?: number;
 }
 
 const SESSION_KEY = 'ktd-session-id';
@@ -56,6 +62,10 @@ function getDevice(): 'mobile' | 'tablet' | 'desktop' {
 export function track(event: TrackEventInput): void {
   if (typeof globalThis.window === 'undefined') return;
 
+  // Skip embedded views (e.g. the /admin/heatmap preview iframe) — only
+  // record what real visitors do in a top-level tab.
+  if (globalThis.window.self !== globalThis.window.top) return;
+
   const path = globalThis.location.pathname;
   if (path.startsWith('/admin')) return;
 
@@ -67,6 +77,8 @@ export function track(event: TrackEventInput): void {
     referrer: event.referrer || undefined,
     target: event.target || undefined,
     device: getDevice(),
+    x: event.x,
+    y: event.y,
   });
 
   try {
