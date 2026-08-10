@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 
 import type { LandingCompanyRow, LandingSectionKey } from '@/types/landing';
 
-type TabId = 'hero' | 'about' | 'services' | 'nav' | 'footer-social' | 'companies';
+type TabId = 'hero' | 'about' | 'services' | 'nav' | 'footer-social' | 'companies' | 'seo';
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'hero', label: 'Hero' },
@@ -19,6 +19,7 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'nav', label: 'Navigation' },
   { id: 'footer-social', label: 'Footer & Social' },
   { id: 'companies', label: 'Companies' },
+  { id: 'seo', label: 'SEO / Metadata' },
 ];
 
 const SECTION_META: Record<LandingSectionKey, { title: string; description: string }> = {
@@ -28,6 +29,10 @@ const SECTION_META: Record<LandingSectionKey, { title: string; description: stri
   services: { title: 'Services', description: 'Services & ventures section title and cards' },
   footer: { title: 'Footer', description: 'Footer text' },
   social: { title: 'Social', description: 'Labels for the social link buttons' },
+  seo: {
+    title: 'SEO / Metadata',
+    description: 'Browser tab title and meta description for search engines and social shares',
+  },
 };
 
 interface ContentEditorProps {
@@ -81,6 +86,7 @@ export function ContentEditor({ sections, companies, languages }: ContentEditorP
           ))}
         </div>
       )}
+      {activeTab === 'seo' && renderSection('seo')}
     </div>
   );
 }

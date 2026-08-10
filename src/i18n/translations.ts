@@ -42,6 +42,11 @@ export const FALLBACK_LANGUAGES: LanguageInfo[] = [
  * Structural/visual config (images, colors, links) lives in src/config/companies.ts
  */
 const en = {
+  seo: {
+    metaTitle: 'KTD Group — Full-Spectrum Technopreneur',
+    metaDescription:
+      'KTD Group bridges deep technical engineering and entrepreneurial growth across satellite data, rock quarry, and brick manufacturing ventures.',
+  },
   nav: {
     companyName: 'KTD Group',
     home: 'Home',
@@ -110,6 +115,11 @@ const en = {
 export type Translations = typeof en;
 
 const th: Translations = {
+  seo: {
+    metaTitle: 'กลุ่มบริษัท KTD — ผู้ประกอบการเทคโนโลยีครบวงจร',
+    metaDescription:
+      'กลุ่มบริษัท KTD เชื่อมโยงวิศวกรรมเชิงเทคนิคเข้ากับการเติบโตของธุรกิจ ครอบคลุมธุรกิจข้อมูลดาวเทียม เหมืองหิน และการผลิตอิฐ',
+  },
   nav: {
     companyName: 'กลุ่มบริษัท KTD',
     home: 'หน้าแรก',
@@ -174,6 +184,10 @@ const th: Translations = {
 };
 
 const zh: Translations = {
+  seo: {
+    metaTitle: 'KTD 集团 — 全方位科技创业家',
+    metaDescription: 'KTD 集团连接深度技术工程与企业增长,业务涵盖卫星数据、采石场与制砖等领域。',
+  },
   nav: {
     companyName: 'KTD 集团',
     home: '首页',

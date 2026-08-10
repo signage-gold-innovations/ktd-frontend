@@ -46,19 +46,19 @@ export type Database = {
       };
       landing_sections: {
         Row: {
-          key: 'nav' | 'hero' | 'about' | 'services' | 'footer' | 'social';
+          key: 'nav' | 'hero' | 'about' | 'services' | 'footer' | 'social' | 'seo';
           content: Json;
           images: Json | null;
           updated_at: string;
         };
         Insert: {
-          key: 'nav' | 'hero' | 'about' | 'services' | 'footer' | 'social';
+          key: 'nav' | 'hero' | 'about' | 'services' | 'footer' | 'social' | 'seo';
           content?: Json;
           images?: Json | null;
           updated_at?: string;
         };
         Update: {
-          key?: 'nav' | 'hero' | 'about' | 'services' | 'footer' | 'social';
+          key?: 'nav' | 'hero' | 'about' | 'services' | 'footer' | 'social' | 'seo';
           content?: Json;
           images?: Json | null;
           updated_at?: string;

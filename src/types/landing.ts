@@ -19,6 +19,7 @@ export const LANDING_SECTION_KEYS = [
   'services',
   'footer',
   'social',
+  'seo',
 ] as const;
 export type LandingSectionKey = (typeof LANDING_SECTION_KEYS)[number];
 
